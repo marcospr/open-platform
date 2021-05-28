@@ -17,7 +17,7 @@ public class ErrorUtil {
 		Errors errors = null;
 		try {
 
-			errors = (Errors) apiClient.deserialize(errorsJson, "", Errors.class);
+			errors = (Errors) JsonUtil.deserialize(errorsJson, "", Errors.class);
 
 		} catch (ApiException e) {
 			logger.log(Level.WARNING, "Doesnt containt errors structure.");

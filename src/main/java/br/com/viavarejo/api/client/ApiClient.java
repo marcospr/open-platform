@@ -1,511 +1,316 @@
 package br.com.viavarejo.api.client;
 
-import com.fasterxml.jackson.databind.*;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.filter.LoggingFilter;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.multipart.FormDataMultiPart;
-
-import br.com.viavarejo.api.client.auth.ApiKeyAuth;
-import br.com.viavarejo.api.client.auth.Authentication;
-import br.com.viavarejo.api.client.auth.HttpBasicAuth;
-import br.com.viavarejo.api.client.auth.OAuth;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TimeZone;
 
 import javax.ws.rs.core.Response.Status.Family;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Date;
-import java.util.TimeZone;
-
-import java.net.URLEncoder;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.filter.LoggingFilter;
+import com.sun.jersey.multipart.FormDataMultiPart;
 
 public class ApiClient {
-  private Map<String, Client> hostMap = new HashMap<>();
-  private Map<String, String> defaultHeaderMap = new HashMap<>();
-  private boolean debugging = false;
-  private String basePath = "http://api-integracao-casasbahia.hlg-b2b.net";
-  private Properties configProp = new Properties();
+	private Client client;
+	private Map<String, String> defaultHeaderMap = new HashMap<>();
+	private String basePath;
+	private boolean debugging = false;
+	private DateFormat dateFormat;
 
-  private Map<String, Authentication> authentications;
+	public ApiClient(String basePath, String token) {
 
-  private DateFormat dateFormat;
+		this.basePath = basePath;
+		// Use ISO 8601 format for date and datetime.
+		// See https://en.wikipedia.org/wiki/ISO_8601
+		this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-  public ApiClient() {
-	  
-	  InputStream in = this.getClass().getClassLoader().getResourceAsStream("configuration.properties");
-     try {
-         configProp.load(in);
-     } catch (IOException e) {
-   	  throw new RuntimeException("No file configuration properties found!", e);
-     }
-	  
-     basePath = configProp.getProperty("base.path");
-    // Use ISO 8601 format for date and datetime.
-    // See https://en.wikipedia.org/wiki/ISO_8601
-    this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		// Use UTC as the default time zone.
+		this.dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-    // Use UTC as the default time zone.
-    this.dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		// Set default User-Agent.
+		defaultHeaderMap.put("User-Agent", "Java-Client");
 
-    // Set default User-Agent.
-    setUserAgent(configProp.getProperty("header.user.agent"));
+		defaultHeaderMap.put("Authorization", token);
+	}
 
-    // Setup authentications (key: authentication name, value: authentication).
-    authentications = new HashMap<>();
-    //authentications.put("client_id", new ApiKeyAuth("header", "client_id"));
-    authentications.put("access_token", new ApiKeyAuth("header", configProp.getProperty("header.authorization")));
-    // Prevent the authentications from being modified.
-    authentications = Collections.unmodifiableMap(authentications);
-  }
+	public String getBasePath() {
+		return basePath;
+	}
 
-  public String getBasePath() {
-    return basePath;
-  }
+	public ApiClient setBasePath(String basePath) {
+		this.basePath = basePath;
+		return this;
+	}
 
-  public ApiClient setBasePath(String basePath) {
-    this.basePath = basePath;
-    return this;
-  }
+	public void setUserAgent(String userAgent) {
+		defaultHeaderMap.put("User-Agent", userAgent);
+	}
 
-  /**
-   * Get authentications (key: authentication name, value: authentication).
-   */
-  public Map<String, Authentication> getAuthentications() {
-    return authentications;
-  }
+	/**
+	 * Check that whether debugging is enabled for this API client.
+	 */
+	public boolean isDebugging() {
+		return debugging;
+	}
 
-  /**
-   * Get authentication for the given name.
-   *
-   * @param authName The authentication name
-   * @return The authentication, null if not found
-   */
-  public Authentication getAuthentication(String authName) {
-    return authentications.get(authName);
-  }
+	/**
+	 * Enable/disable debugging for this API client.
+	 *
+	 * @param debugging To enable (true) or disable (false) debugging
+	 */
+	public ApiClient setDebugging(boolean debugging) {
+		this.debugging = debugging;
+		return this;
+	}
 
-  /**
-   * Helper method to set username for the first HTTP basic authentication.
-   */
-  public void setUsername(String username) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setUsername(username);
-        return;
-      }
-    }
-    throw new RuntimeException("No HTTP basic authentication configured!");
-  }
+	/**
+	 * Get the date format used to parse/format date parameters.
+	 */
+	public DateFormat getDateFormat() {
+		return dateFormat;
+	}
 
-  /**
-   * Helper method to set password for the first HTTP basic authentication.
-   */
-  public void setPassword(String password) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setPassword(password);
-        return;
-      }
-    }
-    throw new RuntimeException("No HTTP basic authentication configured!");
-  }
+	/**
+	 * Set the date format used to parse/format date parameters.
+	 */
+	public ApiClient getDateFormat(DateFormat dateFormat) {
+		this.dateFormat = dateFormat;
+		return this;
+	}
 
-  /**
-   * Helper method to set API key value for the first API key authentication.
-   */
-  public void setApiKey(String apiKey) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof ApiKeyAuth) {
-        ((ApiKeyAuth) auth).setApiKey(apiKey);
-        return;
-      }
-    }
-    throw new RuntimeException("No API key authentication configured!");
-  }
+	/**
+	 * Parse the given string into Date object.
+	 */
+	public Date parseDate(String str) {
+		try {
+			return dateFormat.parse(str);
+		} catch (java.text.ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-  /**
-   * Helper method to set API key prefix for the first API key authentication.
-   */
-  public void setApiKeyPrefix(String apiKeyPrefix) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof ApiKeyAuth) {
-        ((ApiKeyAuth) auth).setApiKeyPrefix(apiKeyPrefix);
-        return;
-      }
-    }
-    throw new RuntimeException("No API key authentication configured!");
-  }
+	/**
+	 * Format the given Date object into string.
+	 */
+	public String formatDate(Date date) {
+		return dateFormat.format(date);
+	}
 
-  /**
-   * Set the User-Agent header's value (by adding to the default header map).
-   */
-  public ApiClient setUserAgent(String userAgent) {
-    addDefaultHeader("User-Agent", userAgent);
-    return this;
-  }
+	/**
+	 * Format the given parameter object into string.
+	 */
+	public String parameterToString(Object param) {
+		if (param == null) {
+			return "";
+		} else if (param instanceof Date) {
+			return formatDate((Date) param);
+		} else if (param instanceof Collection) {
+			StringBuilder b = new StringBuilder();
+			for (Object o : (Collection) param) {
+				if (b.length() > 0) {
+					b.append(",");
+				}
+				b.append(String.valueOf(o));
+			}
+			return b.toString();
+		} else {
+			return String.valueOf(param);
+		}
+	}
 
-  /**
-   * Add a default header.
-   *
-   * @param key The header's key
-   * @param value The header's value
-   */
-  public ApiClient addDefaultHeader(String key, String value) {
-    defaultHeaderMap.put(key, value);
-    return this;
-  }
+	/**
+	 * Select the Accept header's value from the given accepts array: if JSON exists
+	 * in the given array, use it; otherwise use all of them (joining into a string)
+	 *
+	 * @param accepts The accepts array to select from
+	 * @return The Accept header to use. If the given array is empty, null will be
+	 *         returned (not to set the Accept header explicitly).
+	 */
+	public String selectHeaderAccept(String[] accepts) {
+		if (accepts.length == 0)
+			return null;
+		if (StringUtil.containsIgnoreCase(accepts, "application/json"))
+			return "application/json";
+		return StringUtil.join(accepts, ",");
+	}
 
-  /**
-   * Check that whether debugging is enabled for this API client.
-   */
-  public boolean isDebugging() {
-    return debugging;
-  }
+	/**
+	 * Select the Content-Type header's value from the given array: if JSON exists
+	 * in the given array, use it; otherwise use the first one of the array.
+	 *
+	 * @param contentTypes The Content-Type array to select from
+	 * @return The Content-Type header to use. If the given array is empty, JSON
+	 *         will be used.
+	 */
+	public String selectHeaderContentType(String[] contentTypes) {
+		if (contentTypes.length == 0)
+			return "application/json";
+		if (StringUtil.containsIgnoreCase(contentTypes, "application/json"))
+			return "application/json";
+		return contentTypes[0];
+	}
 
-  /**
-   * Enable/disable debugging for this API client.
-   *
-   * @param debugging To enable (true) or disable (false) debugging
-   */
-  public ApiClient setDebugging(boolean debugging) {
-    this.debugging = debugging;
-    return this;
-  }
+	/**
+	 * Escape the given string to be used as URL query value.
+	 */
+	public String escapeString(String str) {
+		try {
+			return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
+	}
 
-  /**
-   * Get the date format used to parse/format date parameters.
-   */
-  public DateFormat getDateFormat() {
-    return dateFormat;
-  }
+	/**
+	 * Invoke API by sending HTTP request with the given options.
+	 *
+	 * @param path         The sub-path of the HTTP URL
+	 * @param method       The request method, one of "GET", "POST", "PUT", and
+	 *                     "DELETE"
+	 * @param queryParams  The query parameters
+	 * @param body         The request body object
+	 * @param headerParams The header parameters
+	 * @param formParams   The form parameters
+	 * @param accept       The request's Accept header
+	 * @param contentType  The request's Content-Type header
+	 * @param authNames    The authentications to apply
+	 * @return The response body in type of string
+	 */
+	public String invokeAPI(String path, String method, Map<String, String> queryParams, Object body,
+			Map<String, String> headerParams, Map<String, String> formParams, String accept, String contentType,
+			String[] authNames) throws ApiException {
 
-  /**
-   * Set the date format used to parse/format date parameters.
-   */
-  public ApiClient getDateFormat(DateFormat dateFormat) {
-    this.dateFormat = dateFormat;
-    return this;
-  }
+		Client client = getClient();
 
-  /**
-   * Parse the given string into Date object.
-   */
-  public Date parseDate(String str) {
-    try {
-      return dateFormat.parse(str);
-    } catch (java.text.ParseException e) {
-      throw new RuntimeException(e);
-    }
-  }
+		StringBuilder b = new StringBuilder();
+		for (String key : queryParams.keySet()) {
+			String value = queryParams.get(key);
+			if (value != null) {
+				if (b.toString().length() == 0)
+					b.append("?");
+				else
+					b.append("&");
+				b.append(escapeString(key)).append("=").append(escapeString(value));
+			}
+		}
+		String querystring = b.toString();
 
-  /**
-   * Format the given Date object into string.
-   */
-  public String formatDate(Date date) {
-    return dateFormat.format(date);
-  }
+		Builder builder;
+		if (accept == null)
+			builder = client.resource(basePath + path + querystring).getRequestBuilder();
+		else
+			builder = client.resource(basePath + path + querystring).accept(accept);
 
-  /**
-   * Format the given parameter object into string.
-   */
-  public String parameterToString(Object param) {
-    if (param == null) {
-      return "";
-    } else if (param instanceof Date) {
-      return formatDate((Date) param);
-    } else if (param instanceof Collection) {
-      StringBuilder b = new StringBuilder();
-      for(Object o : (Collection)param) {
-        if(b.length() > 0) {
-          b.append(",");
-        }
-        b.append(String.valueOf(o));
-      }
-      return b.toString();
-    } else {
-      return String.valueOf(param);
-    }
-  }
+		for (String key : headerParams.keySet()) {
+			builder = builder.header(key, headerParams.get(key));
+		}
 
-  /**
-   * Select the Accept header's value from the given accepts array:
-   *   if JSON exists in the given array, use it;
-   *   otherwise use all of them (joining into a string)
-   *
-   * @param accepts The accepts array to select from
-   * @return The Accept header to use. If the given array is empty,
-   *   null will be returned (not to set the Accept header explicitly).
-   */
-  public String selectHeaderAccept(String[] accepts) {
-    if (accepts.length == 0) return null;
-    if (StringUtil.containsIgnoreCase(accepts, "application/json")) return "application/json";
-    return StringUtil.join(accepts, ",");
-  }
+		for (String key : defaultHeaderMap.keySet()) {
+			if (!headerParams.containsKey(key)) {
+				builder = builder.header(key, defaultHeaderMap.get(key));
+			}
+		}
 
-  /**
-   * Select the Content-Type header's value from the given array:
-   *   if JSON exists in the given array, use it;
-   *   otherwise use the first one of the array.
-   *
-   * @param contentTypes The Content-Type array to select from
-   * @return The Content-Type header to use. If the given array is empty,
-   *   JSON will be used.
-   */
-  public String selectHeaderContentType(String[] contentTypes) {
-    if (contentTypes.length == 0) return "application/json";
-    if (StringUtil.containsIgnoreCase(contentTypes, "application/json")) return "application/json";
-    return contentTypes[0];
-  }
+		ClientResponse response = null;
 
-  /**
-   * Escape the given string to be used as URL query value.
-   */
-  public String escapeString(String str) {
-    try {
-      return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
-    } catch (UnsupportedEncodingException e) {
-      return str;
-    }
-  }
+		if ("GET".equals(method)) {
+			response = builder.get(ClientResponse.class);
+		} else if ("POST".equals(method)) {
+			if (contentType.startsWith("application/x-www-form-urlencoded")) {
+				String encodedFormParams = this.getXWWWFormUrlencodedParams(formParams);
+				response = builder.type(contentType).post(ClientResponse.class, encodedFormParams);
+			} else if (body == null) {
+				response = builder.post(ClientResponse.class, null);
+			} else if (body instanceof FormDataMultiPart) {
+				response = builder.type(contentType).post(ClientResponse.class, body);
+			} else
+				response = builder.type(contentType).post(ClientResponse.class, JsonUtil.serialize(body));
+		} else if ("PUT".equals(method)) {
+			if ("application/x-www-form-urlencoded".equals(contentType)) {
+				String encodedFormParams = this.getXWWWFormUrlencodedParams(formParams);
+				response = builder.type(contentType).put(ClientResponse.class, encodedFormParams);
+			} else if (body == null) {
+				response = builder.put(ClientResponse.class, JsonUtil.serialize(body));
+			} else {
+				response = builder.type(contentType).put(ClientResponse.class, JsonUtil.serialize(body));
+			}
+		} else if ("DELETE".equals(method)) {
+			if ("application/x-www-form-urlencoded".equals(contentType)) {
+				String encodedFormParams = this.getXWWWFormUrlencodedParams(formParams);
+				response = builder.type(contentType).delete(ClientResponse.class, encodedFormParams);
+			} else if (body == null) {
+				response = builder.delete(ClientResponse.class);
+			} else {
+				response = builder.type(contentType).delete(ClientResponse.class, JsonUtil.serialize(body));
+			}
+		} else {
+			throw new ApiException(500, "unknown method type " + method);
+		}
 
-  /**
-   * Deserialize the given JSON string to Java object.
-   *
-   * @param json The JSON string
-   * @param containerType The container type, one of "list", "array" or ""
-   * @param cls The type of the Java object
-   * @return The deserialized Java object
-   */
-  public Object deserialize(String json, String containerType, Class cls) throws ApiException {
-    if(null != containerType) {
-        containerType = containerType.toLowerCase();
-    }
-    try{
-      if("list".equals(containerType) || "array".equals(containerType)) {
-        JavaType typeInfo = JsonUtil.getJsonMapper().getTypeFactory().constructCollectionType(List.class, cls);
-        List response = (List<?>) JsonUtil.getJsonMapper().readValue(json, typeInfo);
-        return response;
-      }
-      else if(String.class.equals(cls)) {
-        if(json != null && json.startsWith("\"") && json.endsWith("\"") && json.length() > 1)
-          return json.substring(1, json.length() - 2);
-        else
-          return json;
-      }
-      else {
-        return JsonUtil.getJsonMapper().readValue(json, cls);
-      }
-    }
-    catch (IOException e) {
-      throw new ApiException(500, e.getMessage(), null, json);
-    }
-  }
+		String messageStatus = String.format("Status: %d - %s", response.getStatus(),
+				response.getStatusInfo().toString());
 
-  /**
-   * Serialize the given Java object into JSON string.
-   */
-  public String serialize(Object obj) throws ApiException {
-    try {
-      if (obj != null)
-        return JsonUtil.getJsonMapper().writeValueAsString(obj);
-      else
-        return null;
-    }
-    catch (Exception e) {
-      throw new ApiException(500, e.getMessage());
-    }
-  }
+		if (ClientResponse.Status.fromStatusCode(response.getStatus()) == ClientResponse.Status.NO_CONTENT) {
+			return messageStatus;
+		} else if (ClientResponse.Status.getFamilyByStatusCode(response.getStatus()) == Family.SUCCESSFUL) {
+			if (response.hasEntity()) {
+				return messageStatus + "\n" + JsonUtil.indent(response.getEntity(String.class));
+			} else {
+				return messageStatus;
+			}
+		} else {
+			String respBody = null;
+			if (response.hasEntity()) {
+				respBody = String.valueOf(response.getEntity(String.class));
+			}
+			throw new ApiException(response.getStatus(), messageStatus, response.getHeaders(), respBody);
+		}
+	}
 
-  /**
-   * Invoke API by sending HTTP request with the given options.
-   *
-   * @param path The sub-path of the HTTP URL
-   * @param method The request method, one of "GET", "POST", "PUT", and "DELETE"
-   * @param queryParams The query parameters
-   * @param body The request body object
-   * @param headerParams The header parameters
-   * @param formParams The form parameters
-   * @param accept The request's Accept header
-   * @param contentType The request's Content-Type header
-   * @param authNames The authentications to apply
-   * @return The response body in type of string
-   */
-  public String invokeAPI(String path, String method, Map<String, String> queryParams, Object body, Map<String, String> headerParams, Map<String, String> formParams, String accept, String contentType, String[] authNames) throws ApiException {
-    updateParamsForAuth(authNames, queryParams, headerParams);
+	/**
+	 * Encode the given form parameters as request body.
+	 */
+	private String getXWWWFormUrlencodedParams(Map<String, String> formParams) {
+		StringBuilder formParamBuilder = new StringBuilder();
 
-    Client client = getClient();
+		for (Entry<String, String> param : formParams.entrySet()) {
+			String keyStr = parameterToString(param.getKey());
+			String valueStr = parameterToString(param.getValue());
 
-    StringBuilder b = new StringBuilder();
-    for(String key : queryParams.keySet()) {
-      String value = queryParams.get(key);
-      if (value != null){
-        if(b.toString().length() == 0)
-          b.append("?");
-        else
-          b.append("&");
-        b.append(escapeString(key)).append("=").append(escapeString(value));
-      }
-    }
-    String querystring = b.toString();
+			try {
+				formParamBuilder.append(URLEncoder.encode(keyStr, "utf8")).append("=")
+						.append(URLEncoder.encode(valueStr, "utf8"));
+				formParamBuilder.append("&");
+			} catch (UnsupportedEncodingException e) {
+				// move on to next
+			}
+		}
+		String encodedFormParams = formParamBuilder.toString();
+		if (encodedFormParams.endsWith("&")) {
+			encodedFormParams = encodedFormParams.substring(0, encodedFormParams.length() - 1);
+		}
+		return encodedFormParams;
+	}
 
-    Builder builder;
-    if (accept == null)
-      builder = client.resource(basePath + path + querystring).getRequestBuilder();
-    else
-      builder = client.resource(basePath + path + querystring).accept(accept);
-
-    for(String key : headerParams.keySet()) {
-      builder = builder.header(key, headerParams.get(key));
-    }
-    for(String key : defaultHeaderMap.keySet()) {
-      if(!headerParams.containsKey(key)) {
-        builder = builder.header(key, defaultHeaderMap.get(key));
-      }
-    }
-
-    ClientResponse response = null;
-
-    if("GET".equals(method)) {
-      response = (ClientResponse) builder.get(ClientResponse.class);
-    }
-    else if ("POST".equals(method)) {
-      if (contentType.startsWith("application/x-www-form-urlencoded")) {
-        String encodedFormParams = this
-            .getXWWWFormUrlencodedParams(formParams);
-        response = builder.type(contentType).post(ClientResponse.class,
-            encodedFormParams);
-      } else if (body == null) {
-        response = builder.post(ClientResponse.class, null);
-      } else if(body instanceof FormDataMultiPart) {
-        response = builder.type(contentType).post(ClientResponse.class, body);
-      }
-      else
-        response = builder.type(contentType).post(ClientResponse.class, serialize(body));
-    }
-    else if ("PUT".equals(method)) {
-      if ("application/x-www-form-urlencoded".equals(contentType)) {
-          String encodedFormParams = this
-              .getXWWWFormUrlencodedParams(formParams);
-          response = builder.type(contentType).put(ClientResponse.class,
-              encodedFormParams);
-      } else if(body == null) {
-        response = builder.put(ClientResponse.class, serialize(body));
-      } else {
-          response = builder.type(contentType).put(ClientResponse.class, serialize(body));
-      }
-    }
-    else if ("DELETE".equals(method)) {
-      if ("application/x-www-form-urlencoded".equals(contentType)) {
-        String encodedFormParams = this
-            .getXWWWFormUrlencodedParams(formParams);
-        response = builder.type(contentType).delete(ClientResponse.class,
-            encodedFormParams);
-      } else if(body == null) {
-        response = builder.delete(ClientResponse.class);
-      } else {
-        response = builder.type(contentType).delete(ClientResponse.class, serialize(body));
-      }
-    }
-    else {
-      throw new ApiException(500, "unknown method type " + method);
-    }
-
-    if(ClientResponse.Status.fromStatusCode(response.getStatus()) == ClientResponse.Status.NO_CONTENT) {
-      return null;
-    }
-    else if(ClientResponse.Status.getFamilyByStatusCode(response.getStatus()) == Family.SUCCESSFUL) {
-      if(response.hasEntity()) {
-        return response.getEntity(String.class);
-      }
-      else {
-        return "";
-      }
-    }
-    else {
-      String message = "error";
-      String respBody = null;
-      if(response.hasEntity()) {
-        try{
-          respBody = String.valueOf(response.getEntity(String.class));
-          message = respBody;
-        }
-        catch (RuntimeException e) {
-          // e.printStackTrace();
-        }
-      }
-      throw new ApiException(
-                response.getStatus(),
-                message,
-                response.getHeaders(),
-                respBody);
-    }
-  }
-
-  /**
-   * Update query and header parameters based on authentication settings.
-   *
-   * @param authNames The authentications to apply
-   */
-  private void updateParamsForAuth(String[] authNames, Map<String, String> queryParams, Map<String, String> headerParams) {
-    for (String authName : authNames) {
-      Authentication auth = authentications.get(authName);
-      if (auth == null) throw new RuntimeException("Authentication undefined: " + authName);
-      auth.applyToParams(queryParams, headerParams);
-    }
-  }
-
-  /**
-   * Encode the given form parameters as request body.
-   */
-  private String getXWWWFormUrlencodedParams(Map<String, String> formParams) {
-    StringBuilder formParamBuilder = new StringBuilder();
-
-    for (Entry<String, String> param : formParams.entrySet()) {
-      String keyStr = parameterToString(param.getKey());
-      String valueStr = parameterToString(param.getValue());
-
-      try {
-        formParamBuilder.append(URLEncoder.encode(keyStr, "utf8"))
-            .append("=")
-            .append(URLEncoder.encode(valueStr, "utf8"));
-        formParamBuilder.append("&");
-      } catch (UnsupportedEncodingException e) {
-        // move on to next
-      }
-    }
-    String encodedFormParams = formParamBuilder.toString();
-    if (encodedFormParams.endsWith("&")) {
-      encodedFormParams = encodedFormParams.substring(0,
-          encodedFormParams.length() - 1);
-    }
-    return encodedFormParams;
-  }
-
-  /**
-   * Get an existing client or create a new client to handle HTTP request.
-   */
-  private Client getClient() {
-    if(!hostMap.containsKey(basePath)) {
-      Client client = Client.create();
-      if (debugging)
-        client.addFilter(new LoggingFilter());
-      hostMap.put(basePath, client);
-    }
-    return hostMap.get(basePath);
-  }
+	/**
+	 * Get an existing client or create a new client to handle HTTP request.
+	 */
+	private Client getClient() {
+		if (client == null) {
+			this.client = Client.create();
+			if (debugging) {
+				this.client.addFilter(new LoggingFilter());
+			}
+		}
+		return this.client;
+	}
 }
