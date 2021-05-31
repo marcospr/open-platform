@@ -25,8 +25,8 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		this.tratarRetorno = new JsonConverter<>(clazz);
 	}
 
-	public T get(String path) throws ApiException {
-		return this.get(path, null, null);
+	public T get(String path, String accessToken) throws ApiException {
+		return this.get(path, accessToken, null);
 	}
 
 	public T get(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
@@ -83,9 +83,9 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 
 	private Response doGet(String path, String accessToken, Map<String, String> queryParams) {
 		Response response = null;
-		WebTarget webTarget = this.createWebTarget(path);
+		WebTarget webTarget = this.createWebTarget(path + queryParamStringBuilder(queryParams));
 		if(queryParams != null) {
-			webTarget = webTarget.path(queryParamStringBuilder(queryParams));	
+			//webTarget = webTarget.path();	
 		}	
 		if (accessToken != null) {
 			response = webTarget.request().header("Authorization", accessToken).get();
