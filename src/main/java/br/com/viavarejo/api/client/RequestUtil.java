@@ -1,9 +1,6 @@
 package br.com.viavarejo.api.client;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -83,10 +80,12 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 
 	private Response doGet(String path, String accessToken, Map<String, String> queryParams) {
 		Response response = null;
-		WebTarget webTarget = this.createWebTarget(path + queryParamStringBuilder(queryParams));
+		String fullPath = path;
 		if(queryParams != null) {
-			//webTarget = webTarget.path();	
+			fullPath = fullPath + queryParamStringBuilder(queryParams);
 		}	
+		
+		WebTarget webTarget = this.createWebTarget(fullPath);
 		if (accessToken != null) {
 			response = webTarget.request().header("Authorization", accessToken).get();
 		} else {
@@ -115,11 +114,4 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		return b.toString();
 	}
 	
-//	private String escapeString(String str) {
-//		try {
-//			return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
-//		} catch (UnsupportedEncodingException e) {
-//			return str;
-//		}
-//	}
 }

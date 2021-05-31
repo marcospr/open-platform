@@ -30,6 +30,5 @@ public class CampanhaAPI {
 		queryParams.put("cnpj", cnpj);
 		return requestUtilParcelamento.get("http://api-integracao-casasbahia.hlg-b2b.net/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", "H9xO4+R8GUy+18nUCgPOlg==", queryParams);
 	}
-	
 
 }

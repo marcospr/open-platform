@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -15,9 +16,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "data",
     "error"
 })
-public class ProdutoDTO {
+public class ProdutoDTO implements Serializable{
 
-    @JsonProperty("data")
+	private static final long serialVersionUID = 4161532802164921443L;
+	
+	@JsonProperty("data")
     private ListaProdutos data;
     @JsonProperty("error")
     private Error error;
