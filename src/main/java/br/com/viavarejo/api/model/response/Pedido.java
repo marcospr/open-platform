@@ -1,9 +1,11 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,9 +26,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "dadosEntrega",
     "dadosPagamentoComplementar"
 })
-public class Pedido {
+public class Pedido implements Serializable {
 
-    @JsonProperty("valorProduto")
+	/**
+	* 
+	*/
+	private static final long serialVersionUID = 1L;
+	@JsonProperty("valorProduto")
     private Integer valorProduto;
     @JsonProperty("valorTotalPedido")
     private Integer valorTotalPedido;

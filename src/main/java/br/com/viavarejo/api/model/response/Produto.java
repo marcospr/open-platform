@@ -1,8 +1,10 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,7 +20,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "premio",
     "precoVenda"
 })
-public class Produto {
+public class Produto implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("idLojista")
     private Integer idLojista;

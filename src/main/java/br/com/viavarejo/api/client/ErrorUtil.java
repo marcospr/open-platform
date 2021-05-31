@@ -12,7 +12,7 @@ public class ErrorUtil {
 		throw new IllegalStateException("Utility class");
 	}
 
-	public static Errors deserializeErrors(String errorsJson, ApiClient apiClient) {
+	public static Errors deserializeErrors(String errorsJson) {
 
 		Errors errors = null;
 		try {

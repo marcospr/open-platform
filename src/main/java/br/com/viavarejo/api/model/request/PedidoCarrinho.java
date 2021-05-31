@@ -1,11 +1,17 @@
-package br.com.viavarejo.api.model.response;
+package br.com.viavarejo.api.model.request;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class PedidoCarrinho {
+public class PedidoCarrinho implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@JsonProperty("IdCampanha")
    private Integer idCampanha;
 	
@@ -19,13 +25,6 @@ public class PedidoCarrinho {
    private List<Produtos> produtos = new ArrayList<>();
 
    public PedidoCarrinho() {}
-   
-   public PedidoCarrinho(Integer idCampanha, String cnpj, String cep, List<Produtos> produtos) {
-		this.idCampanha = idCampanha;
-		this.cnpj = cnpj;
-		this.cep = cep;
-		this.produtos = produtos;
-	}
 
 	public Integer getIdCampanha() {
 		return idCampanha;

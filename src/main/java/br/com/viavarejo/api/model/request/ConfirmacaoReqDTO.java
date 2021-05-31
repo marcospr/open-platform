@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.request;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "motivoCancelamento",
     "parceiro"
 })
-public class ConfirmacaoReqDTO {
+public class ConfirmacaoReqDTO implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("idCampanha")
     private Integer idCampanha;

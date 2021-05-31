@@ -55,6 +55,15 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		}
 	}
 
+	public Response patch(String path, String accessToken, T entity) throws ApiException {
+		try {
+			Response response = this.doPath(path, accessToken, entity);
+			return response;
+		} finally {
+			this.closeClient();
+		}
+	}
+
 	private WebTarget createWebTarget(String path) {
 		this.client = ClientBuilder.newClient();
 		return this.client.target(path);
@@ -71,9 +80,23 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
-			response = webTarget.request().header("Authorization", accessToken).post(Entity.json(entity));
+			response = webTarget.request().header("Authorization", accessToken)
+					.post(Entity.json(entity));
 		} else {
 			response = webTarget.request().post(Entity.json(entity));
+		}
+		return response;
+	}
+
+	private Response doPath(String path, String accessToken, T entity) {
+		Response response = null;
+		WebTarget webTarget = this.createWebTarget(path);
+		if (accessToken != null) {
+
+			response = webTarget.request().header("Authorization", accessToken).header("X-HTTP-Method-Override", "PATCH")
+					.method("PUT", Entity.json(entity));
+		} else {
+			response = webTarget.request().method("PATCH", Entity.json(entity));
 		}
 		return response;
 	}

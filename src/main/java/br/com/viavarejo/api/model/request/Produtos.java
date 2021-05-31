@@ -1,8 +1,15 @@
-package br.com.viavarejo.api.model.response;
+package br.com.viavarejo.api.model.request;
+
+import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Produtos {
+public class Produtos implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@JsonProperty("Codigo")
 	private Integer codigo;
 	
@@ -14,12 +21,6 @@ public class Produtos {
    
    public Produtos() {}
    
-	public Produtos(Integer codigo, Integer quantidade, Integer idLojista) {
-		this.codigo = codigo;
-		this.quantidade = quantidade;
-		this.idLojista = idLojista;
-	}
-
 	public Integer getCodigo() {
 		return codigo;
 	}
