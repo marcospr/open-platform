@@ -1,14 +1,23 @@
 package br.com.viavarejo.api.client;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import com.sun.jersey.api.client.Client;
 
 public class RequestUtil<T extends Serializable> implements Serializable {
 
+
+	private static final long serialVersionUID = 1L;
+	
 	private transient Client client;
 	private JsonConverter<T> tratarRetorno;
 
@@ -17,12 +26,12 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 	}
 
 	public T get(String path) throws ApiException {
-		return this.get(path, null);
+		return this.get(path, null, null);
 	}
 
-	public T get(String path, String accessToken) throws ApiException {
+	public T get(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
 		try {
-			Response response = this.doGet(path, accessToken, null, null);
+			Response response = this.doGet(path, accessToken, queryParams);
 			T retorno = this.tratarRetorno.convertToObject(response);
 			return retorno;
 		} finally {
@@ -31,7 +40,7 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 	}
 
 
-	public Response post(String path, T entity) {
+	public Response post(String path, T entity) throws ApiException{
 		try {
 			Response response = this.doPost(path, null, entity);
 			return response;
@@ -40,7 +49,7 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		}
 	}
 
-	public Response post(String path, String accessToken, T entity) {
+	public Response post(String path, String accessToken, T entity) throws ApiException {
 		try {
 			Response response = this.doPost(path, accessToken, entity);
 			return response;
@@ -72,18 +81,45 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		return response;
 	}
 
-	private Response doGet(String path, String accessToken, String parameter, List<String> parameterValues) {
+	private Response doGet(String path, String accessToken, Map<String, String> queryParams) {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
-		if (parameter != null) {
-			webTarget = webTarget.queryParam(parameter, parameterValues.toArray());
-		}
+		if(queryParams != null) {
+			webTarget = webTarget.path(queryParamStringBuilder(queryParams));	
+		}	
 		if (accessToken != null) {
-			String bearerAccessToken = String.format(BEARER_ACCESS_TOKEN, accessToken);
-			response = webTarget.request().header(AUTHORIZATION_HEADER, bearerAccessToken).get();
+			response = webTarget.request().header("Authorization", accessToken).get();
 		} else {
 			response = webTarget.request().get();
 		}
+		
+//		if(response.getStatus() != 200) {
+//			throw new ApiException(response.getStatus(), response.);
+//		}
+		
 		return response;
 	}
+	
+	private String queryParamStringBuilder(Map<String, String> queryParams) {
+		StringBuilder b = new StringBuilder();
+		for (String key : queryParams.keySet()) {
+			String value = queryParams.get(key);
+			if (value != null) {
+				if (b.toString().length() == 0)
+					b.append("?");
+				else
+					b.append("&");
+				b.append(key).append("=").append(value);
+			}
+		}
+		return b.toString();
+	}
+	
+//	private String escapeString(String str) {
+//		try {
+//			return URLEncoder.encode(str, "utf8").replaceAll("\\+", "%20");
+//		} catch (UnsupportedEncodingException e) {
+//			return str;
+//		}
+//	}
 }

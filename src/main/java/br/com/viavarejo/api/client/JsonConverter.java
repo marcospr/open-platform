@@ -1,17 +1,12 @@
 package br.com.viavarejo.api.client;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.sun.jersey.api.client.ClientResponse.Status;
 
 public class JsonConverter<T extends Serializable> implements Serializable {
 
@@ -46,25 +41,6 @@ public class JsonConverter<T extends Serializable> implements Serializable {
 		return gson.toJson(entity);
 	}
 
-	public String convertToList(List<T> entitys) {
-
-		StringBuilder finalResult = new StringBuilder("");
-		StringBuilder partialResult = new StringBuilder("");
-
-		for (T entity : entitys) {
-			partialResult.append(convertToString(entity));
-			partialResult.append(",");
-		}
-
-		if (partialResult.length() > 0) {
-			// remove a última virgula para nao gerar um objeto a mais
-			partialResult.setLength(partialResult.length() - 1);
-		}
-
-		finalResult.append("[").append(partialResult).append("]");
-		return finalResult.toString();
-
-	}
 
 	private String getStringJson(Response response) {
 		return response.readEntity(String.class);
