@@ -1,4 +1,4 @@
-package br.com.viavarejo.api.model;
+package br.com.viavarejo.api.model.response;
 
 import java.util.ArrayList;
 import java.util.List;

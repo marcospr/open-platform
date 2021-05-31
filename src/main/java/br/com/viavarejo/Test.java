@@ -14,8 +14,8 @@ import br.com.viavarejo.api.client.ApiException;
 import br.com.viavarejo.api.client.ErrorUtil;
 import br.com.viavarejo.api.client.JsonUtil;
 import br.com.viavarejo.api.client.auth.ApiKeyAuth;
-import br.com.viavarejo.api.model.PedidoCarrinho;
-import br.com.viavarejo.api.model.Produtos;
+import br.com.viavarejo.api.model.response.PedidoCarrinho;
+import br.com.viavarejo.api.model.response.Produtos;
 
 public class Test {
 	private static final Logger logger = Logger.getLogger(Test.class.getName());

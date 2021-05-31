@@ -8,7 +8,7 @@ import com.sun.jersey.multipart.FormDataMultiPart;
 import br.com.viavarejo.api.client.ApiClient;
 import br.com.viavarejo.api.client.ApiException;
 import br.com.viavarejo.api.client.Configuration;
-import br.com.viavarejo.api.model.PedidoCarrinho;
+import br.com.viavarejo.api.model.response.PedidoCarrinho;
 
 public class PedidoCarrinhoApi {
 	private ApiClient apiClient;
