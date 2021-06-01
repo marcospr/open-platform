@@ -96,7 +96,7 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 			response = webTarget.request().header("Authorization", accessToken).header("X-HTTP-Method-Override", "PATCH")
 					.method("PUT", Entity.json(entity));
 		} else {
-			response = webTarget.request().method("PATCH", Entity.json(entity));
+			response = webTarget.request().header("X-HTTP-Method-Override", "PATCH").method("PUT", Entity.json(entity));
 		}
 		return response;
 	}

@@ -13,7 +13,8 @@ import br.com.viavarejo.api.model.response.Pedido;
 public class PedidoApi {
 	private RequestUtil<PedidoCarrinho> requestUtilPedidoCarrinho = new RequestUtil<PedidoCarrinho>(
 			PedidoCarrinho.class);
-	private RequestUtil<Pedido> requestUtilPedido = new RequestUtil<Pedido>(Pedido.class);
+	private RequestUtil<Pedido> requestUtilPedidoParceiro = new RequestUtil<Pedido>(Pedido.class);
+	private RequestUtil<String> requestUtilNotaFiscalPedido = new RequestUtil<String>(String.class);
 	private RequestUtil<ConfirmacaoReqDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<ConfirmacaoReqDTO>(
 			ConfirmacaoReqDTO.class);
 
@@ -33,24 +34,21 @@ public class PedidoApi {
 		}
 
 		// create path and map variables
-		String path = "/pedidos/carrinho".replaceAll("\\{format\\}", "json");
+		String path = basePath + "/pedidos/carrinho";
 
-		return requestUtilPedidoCarrinho.post(basePath + "/" + path, authorization, pedidosCarrinho);
+		return requestUtilPedidoCarrinho.post(path, authorization, pedidosCarrinho);
 	}
 
-	public Pedido getDadosPedidoParceiro(Map<String, String> variableParams) throws ApiException {
-
+	public Pedido getDadosPedidoParceiro(Map<String, String> pathParams) throws ApiException {
 		// verify the required parameter
-		if (variableParams == null) {
-			throw new ApiException(400, "Missing the required parameter 'variableParams'");
+		if (pathParams == null) {
+			throw new ApiException(400, "Missing the required parameter 'pathParams'");
 		}
 
 		// create path and map variables
-		String path = basePath + "/"
-				+ "/pedidos/{idCompra}".replaceAll("\\{format\\}", "json").replaceAll("\\{" + "idCompra" + "\\}",
-				variableParams.get("request.idCompra"));
+		String path = basePath + String.format("/pedidos/%s", pathParams.get("request.idCompra"));
 
-		return requestUtilPedido.get(path, authorization, variableParams);
+		return requestUtilPedidoParceiro.get(path, authorization, pathParams);
 	}
 
 	public Response patchPedidosCancelamentoOrConfirmacao(ConfirmacaoReqDTO confirmacaoPedido,
@@ -68,11 +66,21 @@ public class PedidoApi {
 		}
 
 		// create path and map variables
-		String path = basePath + "/" + "/pedidos/{idCompra}".replaceAll("\\{format\\}", "json")
-				.replaceAll("\\{" + "idCompra" + "\\}",
-						variableParams.get("idCompra"));
+		String path = basePath + String.format("/pedidos/%s", variableParams.get("idCompra"));
 
 		return requestUtilConfirmacaoReqDTO.patch(path, authorization, confirmacaoPedido);
+	}
+
+	public String getNotaFiscalPedido(Map<String, String> pathParams) throws ApiException {
+		// verify the required parameter
+		if (pathParams == null) {
+			throw new ApiException(400, "Missing the required parameter 'pathParams'");
+		}
+		// create path and map variables
+		String path = basePath + String.format("/pedidos/%s/entregas/%s/nfe/%s", pathParams.get("idCompra"),
+				pathParams.get("idCompraEntrega"), pathParams.get("formato"));
+
+		return requestUtilNotaFiscalPedido.get(path, authorization, pathParams);
 	}
 
 }

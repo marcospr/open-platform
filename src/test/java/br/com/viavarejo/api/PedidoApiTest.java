@@ -92,4 +92,20 @@ public class PedidoApiTest {
 		}
 	}
 
+	@Test
+	public void testGetNotaFiscalPedidoWithSucess() {
+		Map<String, String> pathParams = new HashMap<>();
+		pathParams.put("idCompra", "247473612");
+		pathParams.put("idCompraEntrega", "57.822.975/0001-12");
+		pathParams.put("formato", "PDF");
+
+		String response;
+		try {
+			response = pedidoApi.getNotaFiscalPedido(pathParams);
+			Assert.assertEquals("{}", response);
+		} catch (ApiException e) {
+			fail("Falha. Uma exceção não deveria ser lançada!");
+		}
+	}
+
 }
