@@ -6,7 +6,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 
 public class JsonConverter<T extends Serializable> implements Serializable {
 
@@ -16,13 +15,10 @@ public class JsonConverter<T extends Serializable> implements Serializable {
 
 	private transient Gson gson;
 
-	private transient JsonParser jsonParser;
-
 	private Class<T> clazz;
 
 	public JsonConverter(Class<T> clazz) {
 		this.gsonBuilder = new GsonBuilder();
-		this.jsonParser = new JsonParser();
 		gson = gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss").create();
 		this.clazz = clazz;
 	}

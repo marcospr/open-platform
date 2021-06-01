@@ -43,10 +43,12 @@ public class PedidoApiTest {
 		Response response;
 		try {
 			response = pedidoApi.postPedidosCarrinho(pedidoCarrinho);
-			System.out.println(response);
 			Assert.assertNotNull(response);
 		} catch (ApiException e) {
-			fail("Falha. Uma exceção não deveria ser lançada!");
+			printErrorApi(e);
+			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+		} catch (Exception e) {
+			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
@@ -61,10 +63,12 @@ public class PedidoApiTest {
 		Pedido response;
 		try {
 			response = pedidoApi.getDadosPedidoParceiro(queryParams);
-			System.out.println(response);
 			Assert.assertNotNull(response);
 		} catch (ApiException e) {
-			fail("Falha. Uma exceção não deveria ser lançada!");
+			printErrorApi(e);
+			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+		} catch (Exception e) {
+			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
@@ -84,11 +88,12 @@ public class PedidoApiTest {
 		Response response;
 		try {
 			response = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
-			System.out.println(response);
 			Assert.assertNotNull(response);
 		} catch (ApiException e) {
-			e.printStackTrace();
-			fail("Falha. Uma exceção não deveria ser lançada!");
+			printErrorApi(e);
+			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+		} catch (Exception e) {
+			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
@@ -96,16 +101,24 @@ public class PedidoApiTest {
 	public void testGetNotaFiscalPedidoWithSucess() {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put("idCompra", "247473612");
-		pathParams.put("idCompraEntrega", "57.822.975/0001-12");
+		pathParams.put("idCompraEntrega", "91712686");
 		pathParams.put("formato", "PDF");
 
 		String response;
 		try {
 			response = pedidoApi.getNotaFiscalPedido(pathParams);
-			Assert.assertEquals("{}", response);
+			Assert.assertNotNull("Response nulo", response);
 		} catch (ApiException e) {
-			fail("Falha. Uma exceção não deveria ser lançada!");
+			printErrorApi(e);
+			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+		} catch (Exception e) {
+			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
+	}
+
+	private void printErrorApi(ApiException e) {
+		System.out.println(String.format("ApiException \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s", e.getCode(),
+				e.getMessage(), e.getResponseBody(), e.getResponseHeaders()));
 	}
 
 }

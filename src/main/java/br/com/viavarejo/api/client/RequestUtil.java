@@ -8,6 +8,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 
 public class RequestUtil<T extends Serializable> implements Serializable {
@@ -76,7 +77,7 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		}
 	}
 
-	private Response doPost(String path, String accessToken, T entity) {
+	private Response doPost(String path, String accessToken, T entity) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
@@ -85,10 +86,11 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		} else {
 			response = webTarget.request().post(Entity.json(entity));
 		}
+		validarResponse(response);
 		return response;
 	}
 
-	private Response doPath(String path, String accessToken, T entity) {
+	private Response doPath(String path, String accessToken, T entity) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
@@ -98,10 +100,11 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		} else {
 			response = webTarget.request().header("X-HTTP-Method-Override", "PATCH").method("PUT", Entity.json(entity));
 		}
+		validarResponse(response);
 		return response;
 	}
 
-	private Response doGet(String path, String accessToken, Map<String, String> queryParams) {
+	private Response doGet(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
 		Response response = null;
 		String fullPath = path;
 		if(queryParams != null) {
@@ -114,11 +117,7 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		} else {
 			response = webTarget.request().get();
 		}
-		
-//		if(response.getStatus() != 200) {
-//			throw new ApiException(response.getStatus(), response.);
-//		}
-		
+		validarResponse(response);
 		return response;
 	}
 	
@@ -137,4 +136,20 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		return b.toString();
 	}
 	
+	private void validarResponse(Response response) throws ApiException {
+		if (response.getStatusInfo().getFamily() == Family.SERVER_ERROR) {
+			String message = "error";
+			String respBody = null;
+			if (response.hasEntity()) {
+				try {
+					respBody = String.valueOf(response.readEntity(String.class));
+					message = respBody;
+				} catch (RuntimeException e) {
+					message += "\n" + e.getMessage();
+				}
+			}
+			throw new ApiException(response.getStatus(), message, response.getHeaders(), respBody);
+		}
+	}
+
 }
