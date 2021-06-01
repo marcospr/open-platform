@@ -7,6 +7,7 @@ import javax.ws.rs.core.Response;
 import br.com.viavarejo.api.client.ApiException;
 import br.com.viavarejo.api.client.RequestUtil;
 import br.com.viavarejo.api.model.request.ConfirmacaoReqDTO;
+import br.com.viavarejo.api.model.request.CriarPedidoRequest;
 import br.com.viavarejo.api.model.request.PedidoCarrinho;
 import br.com.viavarejo.api.model.response.Pedido;
 
@@ -17,6 +18,8 @@ public class PedidoApi {
 	private RequestUtil<String> requestUtilNotaFiscalPedido = new RequestUtil<String>(String.class);
 	private RequestUtil<ConfirmacaoReqDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<ConfirmacaoReqDTO>(
 			ConfirmacaoReqDTO.class);
+	private RequestUtil<CriarPedidoRequest> requestUtilPedido = new RequestUtil<CriarPedidoRequest>(
+			CriarPedidoRequest.class);
 
 	private String basePath;
 	private String authorization;
@@ -81,6 +84,19 @@ public class PedidoApi {
 				pathParams.get("idCompraEntrega"), pathParams.get("formato"));
 
 		return requestUtilNotaFiscalPedido.get(path, authorization, pathParams);
+	}
+
+	public Response postCriarPedido(CriarPedidoRequest pedido) throws ApiException {
+		// verify the required parameter
+		if (pedido == null) {
+			throw new ApiException(400,
+					"Missing the required parameter 'pedido'");
+		}
+
+		// create path and map variables
+		String path = basePath + "/pedidos";
+
+		return requestUtilPedido.post(path, authorization, pedido);
 	}
 
 }

@@ -10,6 +10,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
+
 
 public class RequestUtil<T extends Serializable> implements Serializable {
 
@@ -93,12 +95,12 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 	private Response doPath(String path, String accessToken, T entity) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
+		webTarget.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
 		if (accessToken != null) {
 
-			response = webTarget.request().header("Authorization", accessToken).header("X-HTTP-Method-Override", "PATCH")
-					.method("PUT", Entity.json(entity));
+			response = webTarget.request().header("Authorization", accessToken).method("PATCH", Entity.json(entity));
 		} else {
-			response = webTarget.request().header("X-HTTP-Method-Override", "PATCH").method("PUT", Entity.json(entity));
+			response = webTarget.request().method("PATCH", Entity.json(entity));
 		}
 		validarResponse(response);
 		return response;
@@ -137,13 +139,13 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 	}
 	
 	private void validarResponse(Response response) throws ApiException {
-		if (response.getStatusInfo().getFamily() == Family.SERVER_ERROR) {
-			String message = "error";
+		if (response != null && response.getStatusInfo().getFamily() == Family.SERVER_ERROR
+				|| response.getStatusInfo().getFamily() == Family.CLIENT_ERROR) {
+			String message = response.getStatusInfo().getReasonPhrase();
 			String respBody = null;
 			if (response.hasEntity()) {
 				try {
 					respBody = String.valueOf(response.readEntity(String.class));
-					message = respBody;
 				} catch (RuntimeException e) {
 					message += "\n" + e.getMessage();
 				}

@@ -24,7 +24,7 @@ public class DadosEntrega {
     @JsonProperty("previsaoDeEntrega")
     private String previsaoDeEntrega;
     @JsonProperty("valorFrete")
-    private Integer valorFrete;
+		private Double valorFrete;
     @JsonProperty("idEntregaTipo")
     private Integer idEntregaTipo;
     @JsonProperty("idEnderecoLojaFisica")
@@ -45,12 +45,12 @@ public class DadosEntrega {
     }
 
     @JsonProperty("valorFrete")
-    public Integer getValorFrete() {
+		public Double getValorFrete() {
         return valorFrete;
     }
 
     @JsonProperty("valorFrete")
-    public void setValorFrete(Integer valorFrete) {
+		public void setValorFrete(Double valorFrete) {
         this.valorFrete = valorFrete;
     }
 

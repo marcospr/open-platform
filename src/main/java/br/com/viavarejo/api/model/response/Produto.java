@@ -36,7 +36,7 @@ public class Produto implements Serializable {
     @JsonProperty("premio")
     private Integer premio;
     @JsonProperty("precoVenda")
-    private Integer precoVenda;
+		private Double precoVenda;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -81,12 +81,12 @@ public class Produto implements Serializable {
     }
 
     @JsonProperty("precoVenda")
-    public Integer getPrecoVenda() {
+		public Double getPrecoVenda() {
         return precoVenda;
     }
 
     @JsonProperty("precoVenda")
-    public void setPrecoVenda(Integer precoVenda) {
+		public void setPrecoVenda(Double precoVenda) {
         this.precoVenda = precoVenda;
     }
 
