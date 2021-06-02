@@ -48,7 +48,7 @@ public class ProdutoApiTest {
 	@Test
 	public void getDadosProdutoCampanhaSucess(){
 		try {
-			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null);
+			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null, null, null);
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
@@ -88,7 +88,7 @@ public class ProdutoApiTest {
 	@Test
 	public void getDadosProdutoCampanhaFail() throws ApiException{
 		try {
-			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null);
+			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null, null, null);
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");

@@ -9,17 +9,21 @@ import br.com.viavarejo.api.client.RequestUtil;
 import br.com.viavarejo.api.model.request.ConfirmacaoReqDTO;
 import br.com.viavarejo.api.model.request.CriarPedidoRequest;
 import br.com.viavarejo.api.model.request.PedidoCarrinho;
-import br.com.viavarejo.api.model.response.Pedido;
+import br.com.viavarejo.api.model.response.CalculoCarrinho;
+import br.com.viavarejo.api.model.response.ConfirmacaoDTO;
+import br.com.viavarejo.api.model.response.CriarPedidoDTO;
+import br.com.viavarejo.api.model.response.PedidoDTO;
 
 public class PedidoApi {
-	private RequestUtil<PedidoCarrinho> requestUtilPedidoCarrinho = new RequestUtil<PedidoCarrinho>(
-			PedidoCarrinho.class);
-	private RequestUtil<Pedido> requestUtilPedidoParceiro = new RequestUtil<Pedido>(Pedido.class);
-	private RequestUtil<String> requestUtilNotaFiscalPedido = new RequestUtil<String>(String.class);
-	private RequestUtil<ConfirmacaoReqDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<ConfirmacaoReqDTO>(
-			ConfirmacaoReqDTO.class);
-	private RequestUtil<CriarPedidoRequest> requestUtilPedido = new RequestUtil<CriarPedidoRequest>(
-			CriarPedidoRequest.class);
+	private RequestUtil<PedidoCarrinho, CalculoCarrinho> requestUtilPedidoCarrinho = new RequestUtil<PedidoCarrinho, CalculoCarrinho>(
+			CalculoCarrinho.class);
+	private RequestUtil<?, PedidoDTO> requestUtilPedidoParceiro = new RequestUtil<>(
+			PedidoDTO.class);
+	private RequestUtil<ConfirmacaoReqDTO, ConfirmacaoDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<>(
+			ConfirmacaoDTO.class);
+	private RequestUtil<String, String> requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
+	private RequestUtil<CriarPedidoRequest, CriarPedidoDTO> requestUtilCriacaoPedido = new RequestUtil<>(
+			CriarPedidoDTO.class);
 
 	private String basePath;
 	private String authorization;
@@ -29,7 +33,7 @@ public class PedidoApi {
 		this.authorization = authorization;
 	}
 
-	public Response postPedidosCarrinho(PedidoCarrinho pedidosCarrinho) throws ApiException {
+	public CalculoCarrinho postPedidosCarrinho(PedidoCarrinho pedidosCarrinho) throws ApiException {
 		// verify the required parameter
 		if (pedidosCarrinho == null) {
 			throw new ApiException(400,
@@ -42,7 +46,7 @@ public class PedidoApi {
 		return requestUtilPedidoCarrinho.post(path, authorization, pedidosCarrinho);
 	}
 
-	public Pedido getDadosPedidoParceiro(Map<String, String> pathParams) throws ApiException {
+	public PedidoDTO getDadosPedidoParceiro(Map<String, String> pathParams) throws ApiException {
 		// verify the required parameter
 		if (pathParams == null) {
 			throw new ApiException(400, "Missing the required parameter 'pathParams'");
@@ -86,7 +90,7 @@ public class PedidoApi {
 		return requestUtilNotaFiscalPedido.get(path, authorization, pathParams);
 	}
 
-	public Response postCriarPedido(CriarPedidoRequest pedido) throws ApiException {
+	public CriarPedidoDTO postCriarPedido(CriarPedidoRequest pedido) throws ApiException {
 		// verify the required parameter
 		if (pedido == null) {
 			throw new ApiException(400,
@@ -96,7 +100,7 @@ public class PedidoApi {
 		// create path and map variables
 		String path = basePath + "/pedidos";
 
-		return requestUtilPedido.post(path, authorization, pedido);
+		return requestUtilCriacaoPedido.post(path, authorization, pedido);
 	}
 
 }

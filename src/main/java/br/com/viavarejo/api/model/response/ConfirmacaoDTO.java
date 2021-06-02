@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "data",
     "error"
 })
-public class ConfirmacaoDTO {
+public class ConfirmacaoDTO implements Serializable {
 
-    @JsonProperty("data")
+	private static final long serialVersionUID = 1L;
+	@JsonProperty("data")
     private Confirmacao data;
     @JsonProperty("error")
     private Error error;

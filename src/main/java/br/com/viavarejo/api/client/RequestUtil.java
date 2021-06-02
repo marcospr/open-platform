@@ -14,65 +14,60 @@ import javax.ws.rs.core.Response.Status.Family;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 
 
-public class RequestUtil<T extends Serializable> implements Serializable {
-
+public class RequestUtil<T1 extends Serializable, T2 extends Serializable> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private transient Client client;
-	private JsonConverter<T> tratarRetorno;
+	private JsonConverter<T2> tratarRetorno;
 
-	public RequestUtil(Class<T> clazz) {
-		this.tratarRetorno = new JsonConverter<>(clazz);
+	public RequestUtil(Class<T2> clazz2) {
+		this.tratarRetorno = new JsonConverter<>(clazz2);
 	}
 
-	public T get(String path, String accessToken) throws ApiException {
+	public T2 get(String path, String accessToken) throws ApiException {
 		return this.get(path, accessToken, null);
 	}
 
-	public T get(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
+	public T2 get(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
 		try {
 			Response response = this.doGet(path, accessToken, queryParams);
-			T retorno = this.tratarRetorno.convertToObject(response);
-			return retorno;
+			return this.tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 	
-	public T get(String path, String accessToken, String parameter, List<String> parameterValues) throws ApiException {
+	public T2 get(String path, String accessToken, String parameter, List<String> parameterValues) throws ApiException {
 		try {
-		Response response = this.doGet(path, accessToken, parameter, parameterValues);
-		T retorno = tratarRetorno.convertToObject(response);
-		return retorno;
-		} finally {
-		this.closeClient();
-		}
-		}
-
-
-	public Response post(String path, T entity) throws ApiException{
-		try {
-			Response response = this.doPost(path, null, entity);
-			return response;
+			Response response = this.doGet(path, accessToken, parameter, parameterValues);
+			return tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 
-	public Response post(String path, String accessToken, T entity) throws ApiException {
+	public T2 post(String path, T1 entityIn) throws ApiException {
 		try {
-			Response response = this.doPost(path, accessToken, entity);
-			return response;
+			Response response = this.doPost(path, null, entityIn);
+			return this.tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 
-	public Response patch(String path, String accessToken, T entity) throws ApiException {
+	public T2 post(String path, String accessToken, T1 entityIn) throws ApiException {
 		try {
-			Response response = this.doPath(path, accessToken, entity);
-			return response;
+			Response response = this.doPost(path, accessToken, entityIn);
+			return this.tratarRetorno.convertToObject(response);
+		} finally {
+			this.closeClient();
+		}
+	}
+
+	public Response patch(String path, String accessToken, T1 entityIn) throws ApiException {
+		try {
+			return this.doPath(path, accessToken, entityIn);
 		} finally {
 			this.closeClient();
 		}
@@ -90,28 +85,28 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		}
 	}
 
-	private Response doPost(String path, String accessToken, T entity) throws ApiException {
+	private Response doPost(String path, String accessToken, T1 entityIn) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
 			response = webTarget.request().header("Authorization", accessToken)
-					.post(Entity.json(entity));
+					.post(Entity.json(entityIn));
 		} else {
-			response = webTarget.request().post(Entity.json(entity));
+			response = webTarget.request().post(Entity.json(entityIn));
 		}
 		validarResponse(response);
 		return response;
 	}
 
-	private Response doPath(String path, String accessToken, T entity) throws ApiException {
+	private Response doPath(String path, String accessToken, T1 entityIn) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		webTarget.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
 		if (accessToken != null) {
 
-			response = webTarget.request().header("Authorization", accessToken).method("PATCH", Entity.json(entity));
+			response = webTarget.request().header("Authorization", accessToken).method("PATCH", Entity.json(entityIn));
 		} else {
-			response = webTarget.request().method("PATCH", Entity.json(entity));
+			response = webTarget.request().method("PATCH", Entity.json(entityIn));
 		}
 		validarResponse(response);
 		return response;

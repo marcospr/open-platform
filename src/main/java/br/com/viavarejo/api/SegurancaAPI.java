@@ -7,10 +7,10 @@ import br.com.viavarejo.api.model.response.ChaveDTO;
 
 public class SegurancaAPI {
 	
-	private RequestUtil<ChaveDTO> request;
+	private RequestUtil<?, ChaveDTO> request;
 	
 	public SegurancaAPI() {
-		request = new RequestUtil<ChaveDTO>(ChaveDTO.class);
+		request = new RequestUtil<>(ChaveDTO.class);
 	}
 	
 	public ChaveDTO getChave() throws ApiException{

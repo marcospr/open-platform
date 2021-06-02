@@ -10,10 +10,10 @@ import br.com.viavarejo.api.model.response.ProdutoDTO;
 
 public class ProdutoAPI {
 	
-	private RequestUtil<ProdutoDTO> request;
+	private RequestUtil<?, ProdutoDTO> request;
 	
 	public ProdutoAPI() {
-		request = new RequestUtil<ProdutoDTO>(ProdutoDTO.class);
+		request = new RequestUtil<>(ProdutoDTO.class);
 	}
 	
 	

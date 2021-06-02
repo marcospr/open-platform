@@ -9,10 +9,10 @@ import br.com.viavarejo.api.model.response.OpcoesParcelamentoDTO;
 
 public class FormaPagamentoApi {
 	
-	private RequestUtil<OpcoesParcelamentoDTO> request;
+	private RequestUtil<?, OpcoesParcelamentoDTO> request;
 	
 	public FormaPagamentoApi() {
-		request = new RequestUtil<OpcoesParcelamentoDTO>(OpcoesParcelamentoDTO.class);
+		request = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
 	
 	public OpcoesParcelamentoDTO getOpcoesParcelamento(String idFormaPagamento, String idCampanha, String cnpj, String valorParcela) throws ApiException {

@@ -10,12 +10,12 @@ import br.com.viavarejo.api.model.response.OpcoesParcelamentoDTO;
 
 public class CampanhaAPI {
 	
-	private RequestUtil<CampanhasDTO> requestUtilCampanha;
-	private RequestUtil<OpcoesParcelamentoDTO> requestUtilParcelamento;
+	private RequestUtil<?, CampanhasDTO> requestUtilCampanha;
+	private RequestUtil<?, OpcoesParcelamentoDTO> requestUtilParcelamento;
 	
 	public CampanhaAPI() {
-		requestUtilCampanha  =  new RequestUtil<CampanhasDTO>(CampanhasDTO.class);
-		requestUtilParcelamento = new RequestUtil<OpcoesParcelamentoDTO>(OpcoesParcelamentoDTO.class);
+		requestUtilCampanha = new RequestUtil<>(CampanhasDTO.class);
+		requestUtilParcelamento = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
 	
 	public CampanhasDTO getCampanhas(String dtInicio, String dtFim) throws ApiException {

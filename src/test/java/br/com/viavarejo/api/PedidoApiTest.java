@@ -22,14 +22,18 @@ import br.com.viavarejo.api.model.request.EntregaDadosDto;
 import br.com.viavarejo.api.model.request.PedidoCarrinho;
 import br.com.viavarejo.api.model.request.PedidoProdutoDto;
 import br.com.viavarejo.api.model.request.Produtos;
-import br.com.viavarejo.api.model.response.Pedido;
+import br.com.viavarejo.api.model.response.CalculoCarrinho;
+import br.com.viavarejo.api.model.response.CriarPedidoDTO;
+import br.com.viavarejo.api.model.response.PedidoDTO;
 
 public class PedidoApiTest {
 	private PedidoApi pedidoApi;
+	private PedidoApi pedidoApiCB;
 
 	@Before
 	public void init() {
 		pedidoApi = new PedidoApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		pedidoApiCB = new PedidoApi("http://api-integracao-casasbahia.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 
 	@Test
@@ -46,13 +50,12 @@ public class PedidoApiTest {
 		pedidoCarrinho.setCep("01525000");
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
 
-		Response response;
+		CalculoCarrinho calculoCarrinho;
 		try {
-			response = pedidoApi.postPedidosCarrinho(pedidoCarrinho);
-			Assert.assertNotNull(response);
+			calculoCarrinho = pedidoApi.postPedidosCarrinho(pedidoCarrinho);
+			Assert.assertEquals(8935731L, calculoCarrinho.getData().getProdutos().get(0).getIdSku().longValue());
 		} catch (ApiException e) {
-			printErrorApi(e, "testPostPedidoCarrinhoWithSucess");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
@@ -61,18 +64,17 @@ public class PedidoApiTest {
 	@Test
 	public void testGetDadosPedidoParceiroWithSucess() {
 		Map<String, String> queryParams = new HashMap<>();
-		queryParams.put("request.idCompra", "247473612");
+		queryParams.put("request.idCompra", "229277332");
 		queryParams.put("request.cnpj", "57.822.975/0001-12");
-		queryParams.put("request.idCampanha", "5646");
-		queryParams.put("request.idPedidoParceiro", "2020224509");
+		queryParams.put("request.idCampanha", "3139");
+		queryParams.put("request.idPedidoParceiro", "55221211252116");
 
-		Pedido response;
+		PedidoDTO pedidoDTO;
 		try {
-			response = pedidoApi.getDadosPedidoParceiro(queryParams);
-			Assert.assertNotNull(response);
+			pedidoDTO = pedidoApiCB.getDadosPedidoParceiro(queryParams);
+			Assert.assertNotNull(pedidoDTO);
 		} catch (ApiException e) {
-			printErrorApi(e, "testGetDadosPedidoParceiroWithSucess");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
@@ -97,8 +99,7 @@ public class PedidoApiTest {
 			response = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
 			Assert.assertNotNull(response);
 		} catch (ApiException e) {
-			printErrorApi(e, "patchPedidosCancelamentoOrConfirmacao");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
@@ -116,8 +117,7 @@ public class PedidoApiTest {
 			response = pedidoApi.getNotaFiscalPedido(pathParams);
 			Assert.assertNotNull("Response nulo", response);
 		} catch (ApiException e) {
-			printErrorApi(e, "testGetNotaFiscalPedidoWithSucess");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
@@ -171,21 +171,21 @@ public class PedidoApiTest {
 		pedido.setAguardarConfirmacao(true);
 		pedido.setOptantePeloSimples(true);
 
-		Response response;
+		CriarPedidoDTO criarPedidoDTO;
 		try {
-			response = pedidoApi.postCriarPedido(pedido);
-			Assert.assertNotNull(response);
+			criarPedidoDTO = pedidoApi.postCriarPedido(pedido);
+			Assert.assertNotNull(criarPedidoDTO);
 		} catch (ApiException e) {
-			printErrorApi(e, "testPostCriarPedido");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
-	private void printErrorApi(ApiException e, String method) {
-		System.out.println(String.format("ApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s", method,
-				e.getCode(), e.getMessage(), e.getResponseBody(), e.getResponseHeaders()));
+	private String printErrorApi(ApiException e, String method) {
+		return String.format(
+				"Falha. Uma exceção ApiException não deveria ser lançada!\nApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s",
+				method, e.getCode(),
+				e.getMessage(), e.getResponseBody(), e.getResponseHeaders());
 	}
-
 }
