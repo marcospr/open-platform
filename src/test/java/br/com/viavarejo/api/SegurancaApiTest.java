@@ -1,5 +1,6 @@
 package br.com.viavarejo.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -8,39 +9,37 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import br.com.viavarejo.api.client.ApiException;
-import br.com.viavarejo.api.model.response.OpcoesParcelamentoDTO;
+import br.com.viavarejo.api.model.response.ChaveDTO;
 
-public class FormaPagamentoTest {
-	FormaPagamentoApi pagamentoApi;
+public class SegurancaApiTest {
+	private SegurancaAPI segurancaApi;
 	
 	@Before
 	public void init() {
-		pagamentoApi = new FormaPagamentoApi();
+		segurancaApi = new SegurancaAPI();
 	}
 	
-	//SEM MASSA
 	@Test
-	public void getOpcoesParcelamentoSucess() throws ApiException{
+	public void getChaveTestSucess() {
 		try {
-			OpcoesParcelamentoDTO opcoesParcelamento = pagamentoApi.getOpcoesParcelamento("1", "5940", "57.822.975/0001-12", "1000");
-			assertNotNull(opcoesParcelamento);
-		}catch (ApiException e) {
-			printErrorApi(e, "testGetOpcoesParcelamentoSucess");
+			ChaveDTO chave = segurancaApi.getChave();
+			assertNotNull(chave);
+			assertEquals("2018-11-28T13:56:06", chave.getData().getDataCadastro());
+		} catch (ApiException e) {
+			printErrorApi(e, "testGetCampanhaFail");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 	
-	//ERRO FORA DO PADRÃO
 	@Test
 	@Ignore
-	public void getOpcoesParcelamentoFailure() throws ApiException{
+	public void getChaveTestFail() {
 		try {
-			OpcoesParcelamentoDTO opcoesParcelamento = pagamentoApi.getOpcoesParcelamento("8", "5940", "57.822.975/0001-12", "1000");
-			assertNotNull(opcoesParcelamento);
-		}catch (ApiException e) {
-			printErrorApi(e, "testGetOpcoesParcelamentoSucess");
+			ChaveDTO chave = segurancaApi.getChave();
+		} catch (ApiException e) {
+			printErrorApi(e, "testGetCampanhaFail");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());

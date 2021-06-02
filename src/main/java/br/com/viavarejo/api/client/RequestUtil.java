@@ -1,6 +1,7 @@
 package br.com.viavarejo.api.client;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -38,6 +39,16 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 			this.closeClient();
 		}
 	}
+	
+	public T get(String path, String accessToken, String parameter, List<String> parameterValues) throws ApiException {
+		try {
+		Response response = this.doGet(path, accessToken, parameter, parameterValues);
+		T retorno = tratarRetorno.convertToObject(response);
+		return retorno;
+		} finally {
+		this.closeClient();
+		}
+		}
 
 
 	public Response post(String path, T entity) throws ApiException{
@@ -137,6 +148,20 @@ public class RequestUtil<T extends Serializable> implements Serializable {
 		}
 		return b.toString();
 	}
+	
+	private Response doGet(String path, String accessToken, String parameter, List<String> parameterValues) {
+		Response response = null;
+		WebTarget webTarget = this.createWebTarget(path);
+		if (parameter != null) {
+		webTarget = webTarget.queryParam(parameter, parameterValues.toArray());
+		}
+		if (accessToken != null) {
+			response = webTarget.request().header("Authorization", accessToken).get();
+		} else {
+			response = webTarget.request().get();
+		}
+		return response;
+		}
 	
 	private void validarResponse(Response response) throws ApiException {
 		if (response != null && response.getStatusInfo().getFamily() == Family.SERVER_ERROR
