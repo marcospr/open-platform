@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,9 +20,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "idEnderecoLojaFisica",
     "idUnidadeNegocio"
 })
-public class DadosEntrega {
+public class DadosEntrega implements Serializable {
 
-    @JsonProperty("previsaoDeEntrega")
+	private static final long serialVersionUID = 1L;
+	@JsonProperty("previsaoDeEntrega")
     private String previsaoDeEntrega;
     @JsonProperty("valorFrete")
 		private Double valorFrete;

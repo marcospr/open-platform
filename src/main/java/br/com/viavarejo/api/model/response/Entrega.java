@@ -1,9 +1,11 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,10 +33,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "origem",
     "motivo"
 })
-public class Entrega {
+public class Entrega implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("codigoEntrega")
-    private Integer codigoEntrega;
+		private double codigoEntrega;
     @JsonProperty("previsaoEntrega")
     private String previsaoEntrega;
     @JsonProperty("dataEntrega")
@@ -71,12 +77,12 @@ public class Entrega {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("codigoEntrega")
-    public Integer getCodigoEntrega() {
+		public double getCodigoEntrega() {
         return codigoEntrega;
     }
 
     @JsonProperty("codigoEntrega")
-    public void setCodigoEntrega(Integer codigoEntrega) {
+		public void setCodigoEntrega(double codigoEntrega) {
         this.codigoEntrega = codigoEntrega;
     }
 
@@ -250,40 +256,6 @@ public class Entrega {
         this.additionalProperties.put(name, value);
     }
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.previsaoEntrega == null)? 0 :this.previsaoEntrega.hashCode()));
-        result = ((result* 31)+((this.listNotaFiscalXML == null)? 0 :this.listNotaFiscalXML.hashCode()));
-        result = ((result* 31)+((this.motivo == null)? 0 :this.motivo.hashCode()));
-        result = ((result* 31)+((this.estorno == null)? 0 :this.estorno.hashCode()));
-        result = ((result* 31)+((this.origem == null)? 0 :this.origem.hashCode()));
-        result = ((result* 31)+((this.serieNotaFiscal == null)? 0 :this.serieNotaFiscal.hashCode()));
-        result = ((result* 31)+((this.nomeTransportadora == null)? 0 :this.nomeTransportadora.hashCode()));
-        result = ((result* 31)+((this.produtoEntrega == null)? 0 :this.produtoEntrega.hashCode()));
-        result = ((result* 31)+((this.codigoEntrega == null)? 0 :this.codigoEntrega.hashCode()));
-        result = ((result* 31)+((this.idNotaFiscal == null)? 0 :this.idNotaFiscal.hashCode()));
-        result = ((result* 31)+((this.chaveAcesso == null)? 0 :this.chaveAcesso.hashCode()));
-        result = ((result* 31)+((this.rastreioEntrega == null)? 0 :this.rastreioEntrega.hashCode()));
-        result = ((result* 31)+((this.dataEntrega == null)? 0 :this.dataEntrega.hashCode()));
-        result = ((result* 31)+((this.dataEmissaoNotaFiscal == null)? 0 :this.dataEmissaoNotaFiscal.hashCode()));
-        result = ((result* 31)+((this.dataPrevisao == null)? 0 :this.dataPrevisao.hashCode()));
-        result = ((result* 31)+((this.trackingEntrega == null)? 0 :this.trackingEntrega.hashCode()));
-        result = ((result* 31)+((this.linkNotaFiscalPDF == null)? 0 :this.linkNotaFiscalPDF.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        return result;
-    }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof Entrega) == false) {
-            return false;
-        }
-        Entrega rhs = ((Entrega) other);
-        return (((((((((((((((((((this.previsaoEntrega == rhs.previsaoEntrega)||((this.previsaoEntrega!= null)&&this.previsaoEntrega.equals(rhs.previsaoEntrega)))&&((this.listNotaFiscalXML == rhs.listNotaFiscalXML)||((this.listNotaFiscalXML!= null)&&this.listNotaFiscalXML.equals(rhs.listNotaFiscalXML))))&&((this.motivo == rhs.motivo)||((this.motivo!= null)&&this.motivo.equals(rhs.motivo))))&&((this.estorno == rhs.estorno)||((this.estorno!= null)&&this.estorno.equals(rhs.estorno))))&&((this.origem == rhs.origem)||((this.origem!= null)&&this.origem.equals(rhs.origem))))&&((this.serieNotaFiscal == rhs.serieNotaFiscal)||((this.serieNotaFiscal!= null)&&this.serieNotaFiscal.equals(rhs.serieNotaFiscal))))&&((this.nomeTransportadora == rhs.nomeTransportadora)||((this.nomeTransportadora!= null)&&this.nomeTransportadora.equals(rhs.nomeTransportadora))))&&((this.produtoEntrega == rhs.produtoEntrega)||((this.produtoEntrega!= null)&&this.produtoEntrega.equals(rhs.produtoEntrega))))&&((this.codigoEntrega == rhs.codigoEntrega)||((this.codigoEntrega!= null)&&this.codigoEntrega.equals(rhs.codigoEntrega))))&&((this.idNotaFiscal == rhs.idNotaFiscal)||((this.idNotaFiscal!= null)&&this.idNotaFiscal.equals(rhs.idNotaFiscal))))&&((this.chaveAcesso == rhs.chaveAcesso)||((this.chaveAcesso!= null)&&this.chaveAcesso.equals(rhs.chaveAcesso))))&&((this.rastreioEntrega == rhs.rastreioEntrega)||((this.rastreioEntrega!= null)&&this.rastreioEntrega.equals(rhs.rastreioEntrega))))&&((this.dataEntrega == rhs.dataEntrega)||((this.dataEntrega!= null)&&this.dataEntrega.equals(rhs.dataEntrega))))&&((this.dataEmissaoNotaFiscal == rhs.dataEmissaoNotaFiscal)||((this.dataEmissaoNotaFiscal!= null)&&this.dataEmissaoNotaFiscal.equals(rhs.dataEmissaoNotaFiscal))))&&((this.dataPrevisao == rhs.dataPrevisao)||((this.dataPrevisao!= null)&&this.dataPrevisao.equals(rhs.dataPrevisao))))&&((this.trackingEntrega == rhs.trackingEntrega)||((this.trackingEntrega!= null)&&this.trackingEntrega.equals(rhs.trackingEntrega))))&&((this.linkNotaFiscalPDF == rhs.linkNotaFiscalPDF)||((this.linkNotaFiscalPDF!= null)&&this.linkNotaFiscalPDF.equals(rhs.linkNotaFiscalPDF))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
-    }
 
 }

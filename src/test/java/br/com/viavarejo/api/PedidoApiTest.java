@@ -24,7 +24,7 @@ import br.com.viavarejo.api.model.request.PedidoProdutoDto;
 import br.com.viavarejo.api.model.request.Produtos;
 import br.com.viavarejo.api.model.response.CalculoCarrinho;
 import br.com.viavarejo.api.model.response.CriarPedidoDTO;
-import br.com.viavarejo.api.model.response.PedidoDTO;
+import br.com.viavarejo.api.model.response.PedidoParceiroData;
 
 public class PedidoApiTest {
 	private PedidoApi pedidoApi;
@@ -69,10 +69,10 @@ public class PedidoApiTest {
 		queryParams.put("request.idCampanha", "3139");
 		queryParams.put("request.idPedidoParceiro", "55221211252116");
 
-		PedidoDTO pedidoDTO;
+		PedidoParceiroData pedido;
 		try {
-			pedidoDTO = pedidoApiCB.getDadosPedidoParceiro(queryParams);
-			Assert.assertNotNull(pedidoDTO);
+			pedido = pedidoApiCB.getDadosPedidoParceiro(queryParams);
+			Assert.assertEquals(229277332, pedido.getData().getPedido().getCodigoPedido());
 		} catch (ApiException e) {
 			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {

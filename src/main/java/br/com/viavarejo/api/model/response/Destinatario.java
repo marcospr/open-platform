@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "inscricaoEstadual",
     "email"
 })
-public class Destinatario {
+public class Destinatario implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("nome")
     private String nome;

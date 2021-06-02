@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "valorTotal",
     "idLojista"
 })
-public class ProdutoEntrega {
+public class ProdutoEntrega implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("codigo")
     private Integer codigo;
@@ -31,13 +36,13 @@ public class ProdutoEntrega {
     @JsonProperty("quantidade")
     private Integer quantidade;
     @JsonProperty("valor")
-    private Integer valor;
+		private double valor;
     @JsonProperty("frete")
-    private Integer frete;
+		private double frete;
     @JsonProperty("valorAdicional")
-    private Integer valorAdicional;
+		private double valorAdicional;
     @JsonProperty("valorTotal")
-    private Integer valorTotal;
+		private double valorTotal;
     @JsonProperty("idLojista")
     private Integer idLojista;
     @JsonIgnore
@@ -74,42 +79,42 @@ public class ProdutoEntrega {
     }
 
     @JsonProperty("valor")
-    public Integer getValor() {
+		public double getValor() {
         return valor;
     }
 
     @JsonProperty("valor")
-    public void setValor(Integer valor) {
+		public void setValor(double valor) {
         this.valor = valor;
     }
 
     @JsonProperty("frete")
-    public Integer getFrete() {
+		public double getFrete() {
         return frete;
     }
 
     @JsonProperty("frete")
-    public void setFrete(Integer frete) {
+		public void setFrete(double frete) {
         this.frete = frete;
     }
 
     @JsonProperty("valorAdicional")
-    public Integer getValorAdicional() {
+		public double getValorAdicional() {
         return valorAdicional;
     }
 
     @JsonProperty("valorAdicional")
-    public void setValorAdicional(Integer valorAdicional) {
+		public void setValorAdicional(double valorAdicional) {
         this.valorAdicional = valorAdicional;
     }
 
     @JsonProperty("valorTotal")
-    public Integer getValorTotal() {
+		public double getValorTotal() {
         return valorTotal;
     }
 
     @JsonProperty("valorTotal")
-    public void setValorTotal(Integer valorTotal) {
+		public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
     }
 
@@ -133,31 +138,5 @@ public class ProdutoEntrega {
         this.additionalProperties.put(name, value);
     }
 
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = ((result* 31)+((this.codigo == null)? 0 :this.codigo.hashCode()));
-        result = ((result* 31)+((this.idLojista == null)? 0 :this.idLojista.hashCode()));
-        result = ((result* 31)+((this.valorTotal == null)? 0 :this.valorTotal.hashCode()));
-        result = ((result* 31)+((this.valor == null)? 0 :this.valor.hashCode()));
-        result = ((result* 31)+((this.frete == null)? 0 :this.frete.hashCode()));
-        result = ((result* 31)+((this.nome == null)? 0 :this.nome.hashCode()));
-        result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-        result = ((result* 31)+((this.quantidade == null)? 0 :this.quantidade.hashCode()));
-        result = ((result* 31)+((this.valorAdicional == null)? 0 :this.valorAdicional.hashCode()));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == this) {
-            return true;
-        }
-        if ((other instanceof ProdutoEntrega) == false) {
-            return false;
-        }
-        ProdutoEntrega rhs = ((ProdutoEntrega) other);
-        return ((((((((((this.codigo == rhs.codigo)||((this.codigo!= null)&&this.codigo.equals(rhs.codigo)))&&((this.idLojista == rhs.idLojista)||((this.idLojista!= null)&&this.idLojista.equals(rhs.idLojista))))&&((this.valorTotal == rhs.valorTotal)||((this.valorTotal!= null)&&this.valorTotal.equals(rhs.valorTotal))))&&((this.valor == rhs.valor)||((this.valor!= null)&&this.valor.equals(rhs.valor))))&&((this.frete == rhs.frete)||((this.frete!= null)&&this.frete.equals(rhs.frete))))&&((this.nome == rhs.nome)||((this.nome!= null)&&this.nome.equals(rhs.nome))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.quantidade == rhs.quantidade)||((this.quantidade!= null)&&this.quantidade.equals(rhs.quantidade))))&&((this.valorAdicional == rhs.valorAdicional)||((this.valorAdicional!= null)&&this.valorAdicional.equals(rhs.valorAdicional))));
-    }
 
 }

@@ -12,13 +12,12 @@ import br.com.viavarejo.api.model.request.PedidoCarrinho;
 import br.com.viavarejo.api.model.response.CalculoCarrinho;
 import br.com.viavarejo.api.model.response.ConfirmacaoDTO;
 import br.com.viavarejo.api.model.response.CriarPedidoDTO;
-import br.com.viavarejo.api.model.response.PedidoDTO;
+import br.com.viavarejo.api.model.response.PedidoParceiroData;
 
 public class PedidoApi {
 	private RequestUtil<PedidoCarrinho, CalculoCarrinho> requestUtilPedidoCarrinho = new RequestUtil<PedidoCarrinho, CalculoCarrinho>(
 			CalculoCarrinho.class);
-	private RequestUtil<?, PedidoDTO> requestUtilPedidoParceiro = new RequestUtil<>(
-			PedidoDTO.class);
+	private RequestUtil<?, PedidoParceiroData> requestUtilPedidoParceiro = new RequestUtil<>(PedidoParceiroData.class);
 	private RequestUtil<ConfirmacaoReqDTO, ConfirmacaoDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<>(
 			ConfirmacaoDTO.class);
 	private RequestUtil<String, String> requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
@@ -46,7 +45,7 @@ public class PedidoApi {
 		return requestUtilPedidoCarrinho.post(path, authorization, pedidosCarrinho);
 	}
 
-	public PedidoDTO getDadosPedidoParceiro(Map<String, String> pathParams) throws ApiException {
+	public PedidoParceiroData getDadosPedidoParceiro(Map<String, String> pathParams) throws ApiException {
 		// verify the required parameter
 		if (pathParams == null) {
 			throw new ApiException(400, "Missing the required parameter 'pathParams'");

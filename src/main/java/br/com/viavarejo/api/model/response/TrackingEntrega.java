@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "dataEntrega",
     "descricao"
 })
-public class TrackingEntrega {
+public class TrackingEntrega implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("codDescricao")
     private String codDescricao;

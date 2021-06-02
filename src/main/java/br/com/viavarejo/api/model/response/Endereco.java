@@ -1,6 +1,7 @@
 
 package br.com.viavarejo.api.model.response;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "telefone2",
     "telefone3"
 })
-public class Endereco {
+public class Endereco implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
     @JsonProperty("cep")
     private String cep;
