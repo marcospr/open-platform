@@ -3,7 +3,7 @@ package br.com.via.api.model.request;
 import java.io.Serializable;
 import java.util.List;
 
-public class CriarPedidoRequest implements Serializable {
+public class CriacaoPedidoRequest implements Serializable {
 	/**
 	 * 
 	 */
@@ -25,13 +25,10 @@ public class CriarPedidoRequest implements Serializable {
 	boolean possuiPagtoComplementar;
 	private List<PagamentoComplementarDto> pagtosComplementares;
 	private EntregaDadosDto dadosEntrega;
-	private EnderecoEntregaDto enderecoCobranca;
+	private EnderecoCobrancaDto enderecoCobranca;
 	private Double valorTotalPedido;
 	private Double valorTotalComplementar;
 	private Double valorTotalComplementarComJuros;
-
-	public CriarPedidoRequest() {
-	}
 
 	public List<PedidoProdutoDto> getProdutos() {
 		return produtos;
@@ -169,11 +166,11 @@ public class CriarPedidoRequest implements Serializable {
 		this.dadosEntrega = dadosEntrega;
 	}
 
-	public EnderecoEntregaDto getEnderecoCobranca() {
+	public EnderecoCobrancaDto getEnderecoCobranca() {
 		return enderecoCobranca;
 	}
 
-	public void setEnderecoCobranca(EnderecoEntregaDto enderecoCobranca) {
+	public void setEnderecoCobranca(EnderecoCobrancaDto enderecoCobranca) {
 		this.enderecoCobranca = enderecoCobranca;
 	}
 

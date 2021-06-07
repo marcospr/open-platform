@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import br.com.via.api.model.request.EnderecoCobrancaDto;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "pedido",
@@ -23,7 +25,7 @@ public class DadosPedidoParceiro {
     @JsonProperty("pedido")
     private Pedido pedido;
     @JsonProperty("endereco")
-    private Endereco endereco;
+    private EnderecoCobrancaDto endereco;
     @JsonProperty("destinatario")
     private Destinatario destinatario;
     @JsonProperty("entregas")
@@ -42,12 +44,12 @@ public class DadosPedidoParceiro {
     }
 
     @JsonProperty("endereco")
-    public Endereco getEndereco() {
+    public EnderecoCobrancaDto getEndereco() {
         return endereco;
     }
 
     @JsonProperty("endereco")
-    public void setEndereco(Endereco endereco) {
+    public void setEndereco(EnderecoCobrancaDto endereco) {
         this.endereco = endereco;
     }
 

@@ -13,9 +13,6 @@ public class PagamentoComplementarDto implements Serializable {
 	private Double valorComplementarComJuros;
 	private Double valorComplementar;
 
-	public PagamentoComplementarDto() {
-	}
-
 	public Integer getIdFormaPagamento() {
 		return idFormaPagamento;
 	}

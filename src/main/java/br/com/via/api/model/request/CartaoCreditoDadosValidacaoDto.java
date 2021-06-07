@@ -13,9 +13,6 @@ public class CartaoCreditoDadosValidacaoDto implements Serializable {
 	private String validadeAno;
 	private String validadeMes;
 
-	public CartaoCreditoDadosValidacaoDto() {
-	}
-
 	public String getNome() {
 		return nome;
 	}

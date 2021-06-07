@@ -5,7 +5,7 @@ import java.util.Map;
 import br.com.via.api.client.ApiException;
 import br.com.via.api.client.RequestUtil;
 import br.com.via.api.model.request.ConfirmacaoReqDTO;
-import br.com.via.api.model.request.CriarPedidoRequest;
+import br.com.via.api.model.request.CriacaoPedidoRequest;
 import br.com.via.api.model.request.PedidoCarrinho;
 import br.com.via.api.model.response.CalculoCarrinho;
 import br.com.via.api.model.response.ConfirmacaoDTO;
@@ -19,7 +19,7 @@ public class PedidoApi {
 	private RequestUtil<ConfirmacaoReqDTO, ConfirmacaoDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<>(
 			ConfirmacaoDTO.class);
 	private RequestUtil<String, String> requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
-	private RequestUtil<CriarPedidoRequest, CriacaoPedidoDTO> requestUtilCriacaoPedido = new RequestUtil<>(
+	private RequestUtil<CriacaoPedidoRequest, CriacaoPedidoDTO> requestUtilCriacaoPedido = new RequestUtil<>(
 			CriacaoPedidoDTO.class);
 
 	private String basePath;
@@ -88,7 +88,7 @@ public class PedidoApi {
 		return requestUtilNotaFiscalPedido.get(path, authorization, pathParams);
 	}
 
-	public CriacaoPedidoDTO postCriarPedido(CriarPedidoRequest pedido) throws ApiException {
+	public CriacaoPedidoDTO postCriarPedido(CriacaoPedidoRequest pedido) throws ApiException {
 		// verify the required parameter
 		if (pedido == null) {
 			throw new ApiException(400,

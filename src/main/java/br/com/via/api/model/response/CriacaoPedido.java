@@ -23,13 +23,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class CriacaoPedido {
 
     @JsonProperty("valorProduto")
-    private Integer valorProduto;
+		private double valorProduto;
 
     @JsonProperty("valorTotalPedido")
-    private Integer valorTotalPedido;
+		private double valorTotalPedido;
 
     @JsonProperty("codigoPedido")
-    private Integer codigoPedido;
+		private Integer codigoPedido;
 
     @JsonProperty("pedidoParceiro")
     private Integer pedidoParceiro;
@@ -52,19 +52,19 @@ public class CriacaoPedido {
     @JsonProperty("dadosPagamentoComplementar")
     private DadosPagamentoComplementar dadosPagamentoComplementar;
 
-    public Integer getValorProduto() {
+		public double getValorProduto() {
         return valorProduto;
     }
 
-    public void setValorProduto(Integer valorProduto) {
+		public void setValorProduto(double valorProduto) {
         this.valorProduto = valorProduto;
     }
 
-    public Integer getValorTotalPedido() {
+		public double getValorTotalPedido() {
         return valorTotalPedido;
     }
 
-    public void setValorTotalPedido(Integer valorTotalPedido) {
+		public void setValorTotalPedido(double valorTotalPedido) {
         this.valorTotalPedido = valorTotalPedido;
     }
 
