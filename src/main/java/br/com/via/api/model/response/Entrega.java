@@ -2,260 +2,204 @@
 package br.com.via.api.model.response;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "codigoEntrega",
-    "previsaoEntrega",
-    "dataEntrega",
-    "dataPrevisao",
-    "dataEmissaoNotaFiscal",
-    "idNotaFiscal",
-    "serieNotaFiscal",
-    "chaveAcesso",
-    "trackingEntrega",
-    "produtoEntrega",
-    "rastreioEntrega",
-    "nomeTransportadora",
-    "linkNotaFiscalPDF",
-    "listNotaFiscalXML",
-    "estorno",
-    "origem",
-    "motivo"
-})
+@JsonPropertyOrder({ "codigoEntrega", "previsaoEntrega", "dataEntrega", "dataPrevisao", "dataEmissaoNotaFiscal",
+		"idNotaFiscal", "serieNotaFiscal", "chaveAcesso", "trackingEntrega", "produtoEntrega", "rastreioEntrega",
+		"nomeTransportadora", "linkNotaFiscalPDF", "listNotaFiscalXML", "estorno", "origem", "motivo" })
 public class Entrega implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-    @JsonProperty("codigoEntrega")
-		private double codigoEntrega;
-    @JsonProperty("previsaoEntrega")
-    private String previsaoEntrega;
-    @JsonProperty("dataEntrega")
-    private String dataEntrega;
-    @JsonProperty("dataPrevisao")
-    private String dataPrevisao;
-    @JsonProperty("dataEmissaoNotaFiscal")
-    private String dataEmissaoNotaFiscal;
-    @JsonProperty("idNotaFiscal")
-    private Integer idNotaFiscal;
-    @JsonProperty("serieNotaFiscal")
-    private String serieNotaFiscal;
-    @JsonProperty("chaveAcesso")
-    private String chaveAcesso;
-    @JsonProperty("trackingEntrega")
-    private List<TrackingEntrega> trackingEntrega = null;
-    @JsonProperty("produtoEntrega")
-    private List<ProdutoEntrega> produtoEntrega = null;
-    @JsonProperty("rastreioEntrega")
-    private String rastreioEntrega;
-    @JsonProperty("nomeTransportadora")
-    private String nomeTransportadora;
-    @JsonProperty("linkNotaFiscalPDF")
-    private String linkNotaFiscalPDF;
-    @JsonProperty("listNotaFiscalXML")
-    private String listNotaFiscalXML;
-    @JsonProperty("estorno")
-    private Boolean estorno;
-    @JsonProperty("origem")
-    private String origem;
-    @JsonProperty("motivo")
-    private Motivo motivo;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	@JsonProperty("codigoEntrega")
+	private double codigoEntrega;
 
-    @JsonProperty("codigoEntrega")
-		public double getCodigoEntrega() {
-        return codigoEntrega;
-    }
+	@JsonProperty("previsaoEntrega")
+	private String previsaoEntrega;
 
-    @JsonProperty("codigoEntrega")
-		public void setCodigoEntrega(double codigoEntrega) {
-        this.codigoEntrega = codigoEntrega;
-    }
+	@JsonProperty("dataEntrega")
+	private String dataEntrega;
 
-    @JsonProperty("previsaoEntrega")
-    public String getPrevisaoEntrega() {
-        return previsaoEntrega;
-    }
+	@JsonProperty("dataPrevisao")
+	private String dataPrevisao;
 
-    @JsonProperty("previsaoEntrega")
-    public void setPrevisaoEntrega(String previsaoEntrega) {
-        this.previsaoEntrega = previsaoEntrega;
-    }
+	@JsonProperty("dataEmissaoNotaFiscal")
+	private String dataEmissaoNotaFiscal;
 
-    @JsonProperty("dataEntrega")
-    public String getDataEntrega() {
-        return dataEntrega;
-    }
+	@JsonProperty("idNotaFiscal")
+	private Integer idNotaFiscal;
 
-    @JsonProperty("dataEntrega")
-    public void setDataEntrega(String dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
+	@JsonProperty("serieNotaFiscal")
+	private String serieNotaFiscal;
 
-    @JsonProperty("dataPrevisao")
-    public String getDataPrevisao() {
-        return dataPrevisao;
-    }
+	@JsonProperty("chaveAcesso")
+	private String chaveAcesso;
 
-    @JsonProperty("dataPrevisao")
-    public void setDataPrevisao(String dataPrevisao) {
-        this.dataPrevisao = dataPrevisao;
-    }
+	@JsonProperty("trackingEntrega")
+	private List<TrackingEntrega> trackingEntrega = null;
 
-    @JsonProperty("dataEmissaoNotaFiscal")
-    public String getDataEmissaoNotaFiscal() {
-        return dataEmissaoNotaFiscal;
-    }
+	@JsonProperty("produtoEntrega")
+	private List<ProdutoEntrega> produtoEntrega = null;
 
-    @JsonProperty("dataEmissaoNotaFiscal")
-    public void setDataEmissaoNotaFiscal(String dataEmissaoNotaFiscal) {
-        this.dataEmissaoNotaFiscal = dataEmissaoNotaFiscal;
-    }
+	@JsonProperty("rastreioEntrega")
+	private String rastreioEntrega;
 
-    @JsonProperty("idNotaFiscal")
-    public Integer getIdNotaFiscal() {
-        return idNotaFiscal;
-    }
+	@JsonProperty("nomeTransportadora")
+	private String nomeTransportadora;
 
-    @JsonProperty("idNotaFiscal")
-    public void setIdNotaFiscal(Integer idNotaFiscal) {
-        this.idNotaFiscal = idNotaFiscal;
-    }
+	@JsonProperty("linkNotaFiscalPDF")
+	private String linkNotaFiscalPDF;
 
-    @JsonProperty("serieNotaFiscal")
-    public String getSerieNotaFiscal() {
-        return serieNotaFiscal;
-    }
+	@JsonProperty("listNotaFiscalXML")
+	private String listNotaFiscalXML;
 
-    @JsonProperty("serieNotaFiscal")
-    public void setSerieNotaFiscal(String serieNotaFiscal) {
-        this.serieNotaFiscal = serieNotaFiscal;
-    }
+	@JsonProperty("estorno")
+	private Boolean estorno;
 
-    @JsonProperty("chaveAcesso")
-    public String getChaveAcesso() {
-        return chaveAcesso;
-    }
+	@JsonProperty("origem")
+	private String origem;
 
-    @JsonProperty("chaveAcesso")
-    public void setChaveAcesso(String chaveAcesso) {
-        this.chaveAcesso = chaveAcesso;
-    }
+	@JsonProperty("motivo")
+	private Motivo motivo;
 
-    @JsonProperty("trackingEntrega")
-    public List<TrackingEntrega> getTrackingEntrega() {
-        return trackingEntrega;
-    }
+	public double getCodigoEntrega() {
+		return codigoEntrega;
+	}
 
-    @JsonProperty("trackingEntrega")
-    public void setTrackingEntrega(List<TrackingEntrega> trackingEntrega) {
-        this.trackingEntrega = trackingEntrega;
-    }
+	public void setCodigoEntrega(double codigoEntrega) {
+		this.codigoEntrega = codigoEntrega;
+	}
 
-    @JsonProperty("produtoEntrega")
-    public List<ProdutoEntrega> getProdutoEntrega() {
-        return produtoEntrega;
-    }
+	public String getPrevisaoEntrega() {
+		return previsaoEntrega;
+	}
 
-    @JsonProperty("produtoEntrega")
-    public void setProdutoEntrega(List<ProdutoEntrega> produtoEntrega) {
-        this.produtoEntrega = produtoEntrega;
-    }
+	public void setPrevisaoEntrega(String previsaoEntrega) {
+		this.previsaoEntrega = previsaoEntrega;
+	}
 
-    @JsonProperty("rastreioEntrega")
-    public String getRastreioEntrega() {
-        return rastreioEntrega;
-    }
+	public String getDataEntrega() {
+		return dataEntrega;
+	}
 
-    @JsonProperty("rastreioEntrega")
-    public void setRastreioEntrega(String rastreioEntrega) {
-        this.rastreioEntrega = rastreioEntrega;
-    }
+	public void setDataEntrega(String dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
 
-    @JsonProperty("nomeTransportadora")
-    public String getNomeTransportadora() {
-        return nomeTransportadora;
-    }
+	public String getDataPrevisao() {
+		return dataPrevisao;
+	}
 
-    @JsonProperty("nomeTransportadora")
-    public void setNomeTransportadora(String nomeTransportadora) {
-        this.nomeTransportadora = nomeTransportadora;
-    }
+	public void setDataPrevisao(String dataPrevisao) {
+		this.dataPrevisao = dataPrevisao;
+	}
 
-    @JsonProperty("linkNotaFiscalPDF")
-    public String getLinkNotaFiscalPDF() {
-        return linkNotaFiscalPDF;
-    }
+	public String getDataEmissaoNotaFiscal() {
+		return dataEmissaoNotaFiscal;
+	}
 
-    @JsonProperty("linkNotaFiscalPDF")
-    public void setLinkNotaFiscalPDF(String linkNotaFiscalPDF) {
-        this.linkNotaFiscalPDF = linkNotaFiscalPDF;
-    }
+	public void setDataEmissaoNotaFiscal(String dataEmissaoNotaFiscal) {
+		this.dataEmissaoNotaFiscal = dataEmissaoNotaFiscal;
+	}
 
-    @JsonProperty("listNotaFiscalXML")
-    public String getListNotaFiscalXML() {
-        return listNotaFiscalXML;
-    }
+	public Integer getIdNotaFiscal() {
+		return idNotaFiscal;
+	}
 
-    @JsonProperty("listNotaFiscalXML")
-    public void setListNotaFiscalXML(String listNotaFiscalXML) {
-        this.listNotaFiscalXML = listNotaFiscalXML;
-    }
+	public void setIdNotaFiscal(Integer idNotaFiscal) {
+		this.idNotaFiscal = idNotaFiscal;
+	}
 
-    @JsonProperty("estorno")
-    public Boolean getEstorno() {
-        return estorno;
-    }
+	public String getSerieNotaFiscal() {
+		return serieNotaFiscal;
+	}
 
-    @JsonProperty("estorno")
-    public void setEstorno(Boolean estorno) {
-        this.estorno = estorno;
-    }
+	public void setSerieNotaFiscal(String serieNotaFiscal) {
+		this.serieNotaFiscal = serieNotaFiscal;
+	}
 
-    @JsonProperty("origem")
-    public String getOrigem() {
-        return origem;
-    }
+	public String getChaveAcesso() {
+		return chaveAcesso;
+	}
 
-    @JsonProperty("origem")
-    public void setOrigem(String origem) {
-        this.origem = origem;
-    }
+	public void setChaveAcesso(String chaveAcesso) {
+		this.chaveAcesso = chaveAcesso;
+	}
 
-    @JsonProperty("motivo")
-    public Motivo getMotivo() {
-        return motivo;
-    }
+	public List<TrackingEntrega> getTrackingEntrega() {
+		return trackingEntrega;
+	}
 
-    @JsonProperty("motivo")
-    public void setMotivo(Motivo motivo) {
-        this.motivo = motivo;
-    }
+	public void setTrackingEntrega(List<TrackingEntrega> trackingEntrega) {
+		this.trackingEntrega = trackingEntrega;
+	}
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
+	public List<ProdutoEntrega> getProdutoEntrega() {
+		return produtoEntrega;
+	}
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
+	public void setProdutoEntrega(List<ProdutoEntrega> produtoEntrega) {
+		this.produtoEntrega = produtoEntrega;
+	}
 
+	public String getRastreioEntrega() {
+		return rastreioEntrega;
+	}
 
+	public void setRastreioEntrega(String rastreioEntrega) {
+		this.rastreioEntrega = rastreioEntrega;
+	}
+
+	public String getNomeTransportadora() {
+		return nomeTransportadora;
+	}
+
+	public void setNomeTransportadora(String nomeTransportadora) {
+		this.nomeTransportadora = nomeTransportadora;
+	}
+
+	public String getLinkNotaFiscalPDF() {
+		return linkNotaFiscalPDF;
+	}
+
+	public void setLinkNotaFiscalPDF(String linkNotaFiscalPDF) {
+		this.linkNotaFiscalPDF = linkNotaFiscalPDF;
+	}
+
+	public String getListNotaFiscalXML() {
+		return listNotaFiscalXML;
+	}
+
+	public void setListNotaFiscalXML(String listNotaFiscalXML) {
+		this.listNotaFiscalXML = listNotaFiscalXML;
+	}
+
+	public Boolean getEstorno() {
+		return estorno;
+	}
+
+	public void setEstorno(Boolean estorno) {
+		this.estorno = estorno;
+	}
+
+	public String getOrigem() {
+		return origem;
+	}
+
+	public void setOrigem(String origem) {
+		this.origem = origem;
+	}
+
+	public Motivo getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(Motivo motivo) {
+		this.motivo = motivo;
+	}
 
 }
