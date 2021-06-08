@@ -52,7 +52,9 @@ public class ProdutoApiTest {
 	@Test
 	public void getDadosProdutoCampanhaSucess(){
 		try {
-			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null, null, null);
+			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha("5940", "5880205", "57.822.975/0001-12", "15");
+			assertNotNull(dadosProdutoCampanha);
+			assertEquals(new Double(29.9), dadosProdutoCampanha.getData().getValor());
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
@@ -64,7 +66,7 @@ public class ProdutoApiTest {
 	@Test
 	public void getDadosProdutoFail() throws ApiException{
 		try {
-			ProdutoDTO dadosProduto = produtoApi.getDadosProduto("15", "5880205");
+			ProdutoDTO dadosProduto = produtoApi.getDadosProduto("15", "595959");
 			assertNotNull(dadosProduto);
 			assertEquals("ProdutoNaoEncontrado", dadosProduto.getError().getCode());
 		}catch (ApiException e) {
@@ -78,7 +80,7 @@ public class ProdutoApiTest {
 	@Test
 	public void getListaDadosProdutosFail() throws ApiException{
 		try {
-			ProdutosDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","5880205", "5880206");
+			ProdutosDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","595959");
 			assertNotNull(listaDadosProdutos);
 			assertEquals("NaoEncontrado", listaDadosProdutos.getError().getCode());
 		}catch (ApiException e) {
@@ -89,16 +91,9 @@ public class ProdutoApiTest {
 		}
 	}
 	
-	@Test
+	@Test(expected = ApiException.class)
 	public void getDadosProdutoCampanhaFail() throws ApiException{
-		try {
-			ProdutoDTO dadosProdutoCampanha = produtoApi.getDadosProdutoCampanha(null, null, null, null);
-		}catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaSucess");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
-		} catch (Exception e) {
-			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
-		}
+			produtoApi.getDadosProdutoCampanha("5940", "595959", "2", "2");
 	}
 	
 	private void printErrorApi(ApiException e, String method) {
