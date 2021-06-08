@@ -29,9 +29,7 @@ public class PropsReaderUtil {
 	private Properties getProp() throws IOException {
 		Properties prop = new Properties();
 		String propFileName = "config.properties";
-		
 		inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-		
 		try {
 			prop.load(inputStream);
 		} catch (Exception e) {

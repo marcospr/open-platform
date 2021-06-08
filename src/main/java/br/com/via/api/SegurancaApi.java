@@ -23,5 +23,11 @@ public class SegurancaApi {
 	public ChaveDTO getChave() throws ApiException{
 		return request.get(basePath + "/seguranca/chaves", authorization);
 	}
+	
+	//metodo utilizado somente para teste
+	public SegurancaApi setAuthorization(String token) {
+		this.authorization = token;
+		return this;
+	}
 
 }

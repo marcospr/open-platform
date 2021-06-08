@@ -33,11 +33,13 @@ public class SegurancaApiTest {
 		}
 	}
 	
+	//Mesmo com um token invalido ele tem sucesso na requisição
 	@Test
 	@Ignore
 	public void getChaveTestFail() {
 		try {
-			ChaveDTO chave = segurancaApi.getChave();
+			ChaveDTO chave = segurancaApi.setAuthorization("TOKEN_FALSO_123").getChave();
+			assertNotNull(chave);
 		} catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaFail");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
