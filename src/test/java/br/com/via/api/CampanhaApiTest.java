@@ -3,7 +3,6 @@ package br.com.via.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,20 +17,13 @@ public class CampanhaApiTest {
 	
 	@Before
 	public void init() {
-		campanhaApi = new CampanhaApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		campanhaApi = new CampanhaApi();
 	}
 	
 	@Test
 	public void testGetCampanhaSucess() throws ApiException{
-		try {
 			CampanhasDTO campanhas = campanhaApi.getCampanhas("2019-08-04", "2100-08-04");
 			assertEquals("57.822.975/0001-12", campanhas.getData().get(0).getCnpjContrato());
-		} catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaSucess");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
-		} catch (Exception e) {
-			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
-		}
 	}
 	
 	@Test(expected = ApiException.class)
@@ -55,6 +47,7 @@ public class CampanhaApiTest {
 		OpcoesParcelamentoDTO opcoesParcelamento = campanhaApi.getOpcoesParcelamento("590", "57.822.97-12");
 		assertNotNull(opcoesParcelamento);
 		assertTrue(opcoesParcelamento.getData().isEmpty());
+		assertTrue(opcoesParcelamento.getError().getCode() == null);
 	}
 	
 	

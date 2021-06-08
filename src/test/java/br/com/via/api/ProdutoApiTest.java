@@ -17,12 +17,11 @@ public class ProdutoApiTest {
 	
 	@Before
 	public void init() {
-		produtoApi = new ProdutoApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		produtoApi = new ProdutoApi();
 	}
 	
 	@Test
 	public void getDadosProdutoSucess(){
-		
 		try {
 			ProdutoDTO dadosProduto = produtoApi.getDadosProduto("15", "5880205");
 			assertNotNull(dadosProduto);

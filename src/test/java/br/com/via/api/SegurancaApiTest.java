@@ -16,7 +16,7 @@ public class SegurancaApiTest {
 	
 	@Before
 	public void init() {
-		segurancaApi = new SegurancaApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		segurancaApi = new SegurancaApi();
 	}
 	
 	@Test

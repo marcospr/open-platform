@@ -6,6 +6,7 @@ import java.util.Map;
 
 
 import br.com.via.api.client.ApiException;
+import br.com.via.api.client.PropsReaderUtil;
 import br.com.via.api.client.RequestUtil;
 import br.com.via.api.model.response.ProdutoDTO;
 import br.com.via.api.model.response.ProdutosDTO;
@@ -18,10 +19,11 @@ public class ProdutoApi {
 	
 	private String basePath;
 	private String authorization;
+	private PropsReaderUtil prop = new PropsReaderUtil();
 	
-	public ProdutoApi(String basePath, String authorization) {
-		this.basePath = basePath;
-		this.authorization = authorization;
+	public ProdutoApi() {
+		this.basePath = prop.getHost();
+		this.authorization = prop.getToken();
 		request = new RequestUtil<>(ProdutoDTO.class);
 		requestList = new RequestUtil<>(ProdutosDTO.class);
 	}

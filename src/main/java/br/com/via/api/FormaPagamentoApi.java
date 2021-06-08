@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.via.api.client.ApiException;
+import br.com.via.api.client.PropsReaderUtil;
 import br.com.via.api.client.RequestUtil;
 import br.com.via.api.model.response.OpcoesParcelamentoDTO;
 
@@ -14,9 +15,10 @@ public class FormaPagamentoApi {
 	private String basePath;
 	private String authorization;
 	
-	public FormaPagamentoApi(String basePath, String authorization) {
-		this.basePath = basePath;
-		this.authorization = authorization;
+	public FormaPagamentoApi() {
+		PropsReaderUtil prop = new PropsReaderUtil();
+		this.basePath = prop.getHost();
+		this.authorization = prop.getToken();
 		request = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
 	

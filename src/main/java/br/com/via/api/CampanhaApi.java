@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.via.api.client.ApiException;
+import br.com.via.api.client.PropsReaderUtil;
 import br.com.via.api.client.RequestUtil;
 import br.com.via.api.model.response.CampanhasDTO;
 import br.com.via.api.model.response.OpcoesParcelamentoDTO;
@@ -16,9 +17,10 @@ public class CampanhaApi {
 	private String basePath;
 	private String authorization;
 	
-	public CampanhaApi(String basePath, String authorization) {
-		this.basePath = basePath;
-		this.authorization = authorization;
+	public CampanhaApi() {
+		PropsReaderUtil prop = new PropsReaderUtil();
+		this.basePath = prop.getHost();
+		this.authorization = prop.getToken();
 		requestUtilCampanha = new RequestUtil<>(CampanhasDTO.class);
 		requestUtilParcelamento = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
