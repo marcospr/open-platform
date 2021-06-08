@@ -15,7 +15,7 @@ public class FormaPagamentoTest {
 	
 	@Before
 	public void init() {
-		pagamentoApi = new FormaPagamentoApi();
+		pagamentoApi = new FormaPagamentoApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	//SEM MASSA

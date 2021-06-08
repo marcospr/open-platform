@@ -11,7 +11,12 @@ public class FormaPagamentoApi {
 	
 	private RequestUtil<?, OpcoesParcelamentoDTO> request;
 	
-	public FormaPagamentoApi() {
+	private String basePath;
+	private String authorization;
+	
+	public FormaPagamentoApi(String basePath, String authorization) {
+		this.basePath = basePath;
+		this.authorization = authorization;
 		request = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
 	
@@ -20,7 +25,7 @@ public class FormaPagamentoApi {
 		queryParams.put("idCampanha", idCampanha);
 		queryParams.put("cnpj", cnpj);
 		queryParams.put("valorParcelar", valorParcela);
-		return request.get("http://api-integracao-casasbahia.hlg-b2b.net/formas-pagamento/"+idFormaPagamento+"/opcoes-parcelamento", "H9xO4+R8GUy+18nUCgPOlg==", queryParams);
+		return request.get(basePath + "/formas-pagamento/"+idFormaPagamento+"/opcoes-parcelamento", authorization, queryParams);
 	}
 
 }

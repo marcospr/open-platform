@@ -9,13 +9,14 @@ import org.junit.Test;
 
 import br.com.viavarejo.api.client.ApiException;
 import br.com.viavarejo.api.model.response.ProdutoDTO;
+import br.com.viavarejo.api.model.response.ProdutosDTO;
 
 public class ProdutoApiTest {
 	ProdutoAPI produtoApi;
 	
 	@Before
 	public void init() {
-		produtoApi = new ProdutoAPI();
+		produtoApi = new ProdutoAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test
@@ -24,6 +25,7 @@ public class ProdutoApiTest {
 		try {
 			ProdutoDTO dadosProduto = produtoApi.getDadosProduto("15", "5880205");
 			assertNotNull(dadosProduto);
+			assertEquals("Bola de Natal Santini Christmas 10cm Transparente - 3 Unidades.", dadosProduto.getData().getNome());
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
@@ -35,10 +37,11 @@ public class ProdutoApiTest {
 	@Test
 	public void getListaDadosProdutosSucess(){
 		try {
-			ProdutoDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","5880205", "5880206");
-
+			ProdutosDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","5880205", "5880206");
+			assertNotNull(listaDadosProdutos);
+			assertEquals(listaDadosProdutos.getData().get(0).getImagem(), "http://imagens.extra.com.br/Control/ArquivoExibir.aspx?IdArquivo=253172122");
 		}catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaSucess");
+			printErrorApi(e, "getListaDadosProdutosSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
@@ -74,7 +77,7 @@ public class ProdutoApiTest {
 	@Test
 	public void getListaDadosProdutosFail() throws ApiException{
 		try {
-			ProdutoDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","5880205", "5880206");
+			ProdutosDTO listaDadosProdutos = produtoApi.getListaDadosProdutos("15","5880205", "5880206");
 			assertNotNull(listaDadosProdutos);
 			assertEquals("NaoEncontrado", listaDadosProdutos.getError().getCode());
 		}catch (ApiException e) {

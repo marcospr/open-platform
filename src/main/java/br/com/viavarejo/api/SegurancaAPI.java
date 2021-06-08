@@ -9,12 +9,17 @@ public class SegurancaAPI {
 	
 	private RequestUtil<?, ChaveDTO> request;
 	
-	public SegurancaAPI() {
+	private String basePath;
+	private String authorization;
+	
+	public SegurancaAPI(String basePath, String authorization) {
+		this.basePath = basePath;
+		this.authorization = authorization;
 		request = new RequestUtil<>(ChaveDTO.class);
 	}
 	
 	public ChaveDTO getChave() throws ApiException{
-		return request.get("http://api-integracao-casasbahia.hlg-b2b.net/seguranca/chaves", "H9xO4+R8GUy+18nUCgPOlg==");
+		return request.get(basePath + "/seguranca/chaves", authorization);
 	}
 
 }

@@ -38,9 +38,9 @@ public class ListaProdutos {
     @JsonProperty("categoria")
     private Integer categoria;
     @JsonProperty("valor")
-    private Integer valor;
+    private Double valor;
     @JsonProperty("valorDe")
-    private Integer valorDe;
+    private Double valorDe;
     @JsonProperty("disponibilidade")
     private Boolean disponibilidade;
     @JsonProperty("foraDeLinha")
@@ -93,22 +93,22 @@ public class ListaProdutos {
     }
 
     @JsonProperty("valor")
-    public Integer getValor() {
+    public Double getValor() {
         return valor;
     }
 
     @JsonProperty("valor")
-    public void setValor(Integer valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
     @JsonProperty("valorDe")
-    public Integer getValorDe() {
+    public Double getValorDe() {
         return valorDe;
     }
 
     @JsonProperty("valorDe")
-    public void setValorDe(Integer valorDe) {
+    public void setValorDe(Double valorDe) {
         this.valorDe = valorDe;
     }
 

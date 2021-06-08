@@ -16,7 +16,7 @@ public class SegurancaApiTest {
 	
 	@Before
 	public void init() {
-		segurancaApi = new SegurancaAPI();
+		segurancaApi = new SegurancaAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test
@@ -26,7 +26,7 @@ public class SegurancaApiTest {
 			assertNotNull(chave);
 			assertEquals("2018-11-28T13:56:06", chave.getData().getDataCadastro());
 		} catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaFail");
+			printErrorApi(e, "testgetChaveTestSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());

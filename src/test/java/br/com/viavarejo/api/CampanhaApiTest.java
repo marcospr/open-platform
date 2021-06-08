@@ -17,15 +17,14 @@ public class CampanhaApiTest {
 	
 	@Before
 	public void init() {
-		campanhaApi = new CampanhaAPI();
+		campanhaApi = new CampanhaAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test
 	public void testGetCampanhaSucess() throws ApiException{
 		try {
 			CampanhasDTO campanhas = campanhaApi.getCampanhas("2019-08-04", "2100-08-04");
-			assertEquals("2019-10-17T17:00:00", campanhas.getData().get(0).getDataInicio());
-			assertEquals("2100-02-08T00:00:00",campanhas.getData().get(0).getDataFim());
+			assertEquals("57.822.975/0001-12", campanhas.getData().get(0).getCnpjContrato());
 		} catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");

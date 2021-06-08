@@ -13,7 +13,12 @@ public class CampanhaAPI {
 	private RequestUtil<?, CampanhasDTO> requestUtilCampanha;
 	private RequestUtil<?, OpcoesParcelamentoDTO> requestUtilParcelamento;
 	
-	public CampanhaAPI() {
+	private String basePath;
+	private String authorization;
+	
+	public CampanhaAPI(String basePath, String authorization) {
+		this.basePath = basePath;
+		this.authorization = authorization;
 		requestUtilCampanha = new RequestUtil<>(CampanhasDTO.class);
 		requestUtilParcelamento = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
@@ -22,13 +27,13 @@ public class CampanhaAPI {
 		Map<String, String> queryParams = new HashMap<String, String>();
 		queryParams.put("dataInicio", dtInicio);
 		queryParams.put("dataFim", dtFim);
-		return requestUtilCampanha.get("http://api-integracao-casasbahia.hlg-b2b.net/campanhas", "H9xO4+R8GUy+18nUCgPOlg==", queryParams);
+		return requestUtilCampanha.get(basePath + "/campanhas", authorization, queryParams);
 	}
 	
 	public OpcoesParcelamentoDTO getOpcoesParcelamento(Long idCampanha, String cnpj) throws ApiException {
 		Map<String, String> queryParams = new HashMap<String, String>();
 		queryParams.put("cnpj", cnpj);
-		return requestUtilParcelamento.get("http://api-integracao-casasbahia.hlg-b2b.net/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", "H9xO4+R8GUy+18nUCgPOlg==", queryParams);
+		return requestUtilParcelamento.get(basePath + "/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", authorization, queryParams);
 	}
 
 }
