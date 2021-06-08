@@ -36,16 +36,9 @@ public class CampanhaApiTest {
 	
 	@Test(expected = ApiException.class)
 	public void testGetCampanhaFail() throws ApiException{
-		try {
 			CampanhasDTO campanhas = campanhaApi.getCampanhas("2019-08-04", null);
 			Assert.assertNull(campanhas.getData());
 			assertEquals("400", campanhas.getError().getCode());
-		} catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaFail");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
-		} catch (Exception e) {
-			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
-		}
 	}
 	
 
