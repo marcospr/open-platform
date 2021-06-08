@@ -14,11 +14,11 @@ import br.com.via.api.model.response.CampanhasDTO;
 import br.com.via.api.model.response.OpcoesParcelamentoDTO;
 
 public class CampanhaApiTest {
-	private CampanhaAPI campanhaApi;
+	private CampanhaApi campanhaApi;
 	
 	@Before
 	public void init() {
-		campanhaApi = new CampanhaAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		campanhaApi = new CampanhaApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test

@@ -8,16 +8,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import br.com.via.api.SegurancaAPI;
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.ChaveDTO;
 
 public class SegurancaApiTest {
-	private SegurancaAPI segurancaApi;
+	private SegurancaApi segurancaApi;
 	
 	@Before
 	public void init() {
-		segurancaApi = new SegurancaAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		segurancaApi = new SegurancaApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test

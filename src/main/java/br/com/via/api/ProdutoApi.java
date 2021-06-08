@@ -11,7 +11,7 @@ import br.com.via.api.model.response.ProdutoDTO;
 import br.com.via.api.model.response.ProdutosDTO;
 
 
-public class ProdutoAPI {
+public class ProdutoApi {
 	
 	private RequestUtil<?, ProdutoDTO> request;
 	private RequestUtil<?, ProdutosDTO> requestList;
@@ -19,7 +19,7 @@ public class ProdutoAPI {
 	private String basePath;
 	private String authorization;
 	
-	public ProdutoAPI(String basePath, String authorization) {
+	public ProdutoApi(String basePath, String authorization) {
 		this.basePath = basePath;
 		this.authorization = authorization;
 		request = new RequestUtil<>(ProdutoDTO.class);

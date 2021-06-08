@@ -13,11 +13,11 @@ import br.com.via.api.model.response.ProdutosDTO;
 
 
 public class ProdutoApiTest {
-	ProdutoAPI produtoApi;
+	ProdutoApi produtoApi;
 	
 	@Before
 	public void init() {
-		produtoApi = new ProdutoAPI("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
+		produtoApi = new ProdutoApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
 	@Test
