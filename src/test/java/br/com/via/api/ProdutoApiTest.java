@@ -7,11 +7,9 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-
-import br.com.via.api.ProdutoAPI;
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.ProdutoDTO;
-import br.com.viavarejo.api.model.response.ProdutosDTO;
+import br.com.via.api.model.response.ProdutosDTO;
 
 
 public class ProdutoApiTest {
