@@ -1,13 +1,13 @@
 package br.com.via.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import br.com.via.api.FormaPagamentoApi;
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.OpcoesParcelamentoDTO;
 
@@ -19,12 +19,12 @@ public class FormaPagamentoTest {
 		pagamentoApi = new FormaPagamentoApi("http://api-integracao-extra.hlg-b2b.net", "H9xO4+R8GUy+18nUCgPOlg==");
 	}
 	
-	//SEM MASSA
 	@Test
 	public void getOpcoesParcelamentoSucess() throws ApiException{
 		try {
 			OpcoesParcelamentoDTO opcoesParcelamento = pagamentoApi.getOpcoesParcelamento("1", "5940", "57.822.975/0001-12", "1000");
 			assertNotNull(opcoesParcelamento);
+			assertEquals(new Double(1000.0), opcoesParcelamento.getData().get(0).getValorParcela());;
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetOpcoesParcelamentoSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
@@ -33,13 +33,13 @@ public class FormaPagamentoTest {
 		}
 	}
 	
-	//ERRO FORA DO PADRÃO
+	//ERRO FORA DO PADRÃO(objeto vem todo vazio)
 	@Test
-	@Ignore
 	public void getOpcoesParcelamentoFailure() throws ApiException{
 		try {
 			OpcoesParcelamentoDTO opcoesParcelamento = pagamentoApi.getOpcoesParcelamento("8", "5940", "57.822.975/0001-12", "1000");
 			assertNotNull(opcoesParcelamento);
+			assertTrue(opcoesParcelamento.getData().isEmpty());
 		}catch (ApiException e) {
 			printErrorApi(e, "testGetOpcoesParcelamentoSucess");
 			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
