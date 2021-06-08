@@ -1,11 +1,13 @@
 package br.com.via.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.ProdutoDTO;
@@ -13,10 +15,10 @@ import br.com.via.api.model.response.ProdutosDTO;
 
 
 public class ProdutoApiTest {
-	ProdutoApi produtoApi;
+	private static ProdutoApi produtoApi;
 	
-	@Before
-	public void init() {
+	@BeforeAll
+	public static void init() {
 		produtoApi = new ProdutoApi();
 	}
 	
@@ -90,9 +92,11 @@ public class ProdutoApiTest {
 		}
 	}
 	
-	@Test(expected = ApiException.class)
-	public void getDadosProdutoCampanhaFail() throws ApiException{
+	@Test
+	public void getDadosProdutoCampanhaFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
 			produtoApi.getDadosProdutoCampanha("5940", "595959", "2", "2");
+		});
 	}
 	
 	private void printErrorApi(ApiException e, String method) {

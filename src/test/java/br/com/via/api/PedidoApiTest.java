@@ -9,8 +9,11 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.request.CartaoCreditoDadosDto;
@@ -30,54 +33,134 @@ import br.com.via.api.model.response.ConfirmacaoDTO;
 import br.com.via.api.model.response.CriacaoPedidoDTO;
 import br.com.via.api.model.response.PedidoParceiroData;
 
-public class PedidoApiTest {
+/**
+ * Classe de testes para as URI's dos Pedidos do B2B.</br>
+ * É importante que os metodos sejam executados na ordem estabelecida, pois</br>
+ * alguns metodos de testes possuem dependencia dos resultados dos anteriores.
+ * 
+ * @author Marcos Pinheiro da Rocha
+ *
+ */
+@TestMethodOrder(OrderAnnotation.class)
+class PedidoApiTest {
 
-	private PedidoApi pedidoApi;
+	/** Instancia do client API. */
+	private static PedidoApi pedidoApi;
+
+	/** Token. */
 	private static final String AUTHORIZATION_TOKEN = "H9xO4+R8GUy+18nUCgPOlg==";
-	private static final String HOST_EXTRA = "http://api-integracao-extra.hlg-b2b.net";
-	private static final String HOST_CASAS_BAHIA = "";
-	private static final String HOST_CASAS_PONTO = "";
 
-	@Before
-	public void init() {
+	/** Host do servico do Extra. */
+	private static final String HOST_EXTRA = "http://api-integracao-extra.hlg-b2b.net";
+
+	/** Host do servico das Casas Bahia. */
+	// private static final String HOST_CASAS_BAHIA = "";
+
+	/** Host do servico do Ponto Frio. */
+	// private static final String HOST_PONTO = "";
+
+	/** Id Lojista padrao dos testes. */
+	private static final int ID_LOJISTA = 15;
+
+	/** CNPJ padrao dos testes. */
+	private static final String CNPJ = "57.822.975/0001-12";
+
+	/** Id Campanha padrao dos testes. */
+	private static final int ID_CAMPANHA = 5940;
+
+	/** Atributo do Id Sku para criacao do primeiro Pedido. */
+	private static final Integer ID_SKU_CRIACAO_PEDIDO = 8935731;
+
+	/** Atributo do Id Sku para criacao do segundo Pedido com cartao de credito. */
+	private static final Integer ID_SKU_CRIACAO_PEDIDO_COM_CARTAO = 9342200;
+
+	/**
+	 * Atributo global utilizado para guardar o primeiro pedido criado para ser
+	 * utilizado nos demais testes.
+	 */
+	private static DadosPedido pedidoGeral;
+
+	/**
+	 * Atributo global utilizado para guardar o segundo pedido criado com Cartao
+	 * Credito para ser utilizado nos demais testes.
+	 */
+	private static DadosPedido pedidoGeralComCartao;
+
+	@BeforeAll
+	public static void init() {
 		pedidoApi = new PedidoApi(HOST_EXTRA, AUTHORIZATION_TOKEN);
 	}
 
 	@Test
-	public void testPostPedidoCarrinho() {
-		final long ID_SKU = 8935731L;
+	@Order(1)
+	void testPostCalcularCarrinhoParaCriacaoPedido() {
 		Produtos produto = new Produtos();
-		produto.setCodigo(8935731);
+		produto.setCodigo(ID_SKU_CRIACAO_PEDIDO);
 		produto.setQuantidade(1);
-		produto.setIdLojista(15);
+		produto.setIdLojista(ID_LOJISTA);
 
 		PedidoCarrinho pedidoCarrinho = new PedidoCarrinho();
 
-		pedidoCarrinho.setIdCampanha(5940);
-		pedidoCarrinho.setCnpj("57.822.975/0001-12");
+		pedidoCarrinho.setIdCampanha(ID_CAMPANHA);
+		pedidoCarrinho.setCnpj(CNPJ);
 		pedidoCarrinho.setCep("01525000");
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
 
 		CalculoCarrinho calculoCarrinho;
 		try {
-			calculoCarrinho = pedidoApi.postPedidosCarrinho(pedidoCarrinho);
-			Assert.assertEquals(ID_SKU, calculoCarrinho.getData().getProdutos().get(0).getIdSku().longValue());
+			calculoCarrinho = pedidoApi.postCalcularCarrinho(pedidoCarrinho);
+			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete().doubleValue() > 0.0);
+
+			// preparacao do objeto que sera utilizado nos demais testes
+			pedidoGeral = preparePedido(calculoCarrinho);
+
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testPostCalcularCarrinho"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testPostCriarPedido() {
+	@Order(2)
+	void testPostCalcularCarrinhoParaCriacaoPedidoComCartao() {
+		Produtos produto = new Produtos();
+		produto.setCodigo(ID_SKU_CRIACAO_PEDIDO_COM_CARTAO);
+		produto.setQuantidade(1);
+		produto.setIdLojista(ID_LOJISTA);
+
+		PedidoCarrinho pedidoCarrinho = new PedidoCarrinho();
+
+		pedidoCarrinho.setIdCampanha(ID_CAMPANHA);
+		pedidoCarrinho.setCnpj(CNPJ);
+		pedidoCarrinho.setCep("01525000");
+		pedidoCarrinho.setProdutos(Arrays.asList(produto));
+
+		CalculoCarrinho calculoCarrinho;
+		try {
+			calculoCarrinho = pedidoApi.postCalcularCarrinho(pedidoCarrinho);
+			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete().doubleValue() > 0.0);
+
+			// preparacao do objeto que sera utilizado nos demais testes
+			pedidoGeralComCartao = preparePedido(calculoCarrinho);
+
+		} catch (ApiException e) {
+			fail(printErrorApi(e, "testPostCalcularCarrinhoParaCriacaoPedidoComCartao"));
+		} catch (Exception e) {
+			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
+		}
+	}
+
+	@Test
+	@Order(3)
+	void testPostCriarPedido() {
 		// Produto
 		PedidoProdutoDto produto = new PedidoProdutoDto();
-		produto.setIdLojista(15);
-		produto.setCodigo(8935731);
+		produto.setIdLojista(ID_LOJISTA);
+		produto.setCodigo(pedidoGeral.getIdSku());
 		produto.setQuantidade(1);
 		produto.setPremio(0);
-		produto.setPrecoVenda(29.90);
+		produto.setPrecoVenda(pedidoGeral.getPrecoVenda());
 		List<PedidoProdutoDto> produtos = Arrays.asList(produto);
 
 		// endereco Entrega
@@ -102,7 +185,7 @@ public class PedidoApiTest {
 
 		// dados entrega
 		EntregaDadosDto dadosEntrega = new EntregaDadosDto();
-		dadosEntrega.setValorFrete(4.65);
+		dadosEntrega.setValorFrete(pedidoGeral.valorFrete);
 
 		// pedido
 		CriacaoPedidoRequest pedido = new CriacaoPedidoRequest();
@@ -110,19 +193,24 @@ public class PedidoApiTest {
 		pedido.setEnderecoEntrega(enderecoEntrega);
 		pedido.setDestinatario(destinatario);
 		pedido.setDadosEntrega(dadosEntrega);
-		pedido.setCampanha(5940);
-		pedido.setCnpj("57.822.975/0001-12");
+		pedido.setCampanha(ID_CAMPANHA);
+		pedido.setCnpj(CNPJ);
 		int idPedidoParceiro = new Random().nextInt(65536);
 		idPedidoParceiro = idPedidoParceiro < 0 ? idPedidoParceiro * -1 : idPedidoParceiro;
 		pedido.setPedidoParceiro(idPedidoParceiro);
-		pedido.setValorFrete(4.65);
+		pedido.setValorFrete(pedidoGeral.getValorFrete());
 		pedido.setAguardarConfirmacao(true);
 		pedido.setOptantePeloSimples(true);
 
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
 			criacaoPedidoDTO = pedidoApi.postCriarPedido(pedido);
-			Assert.assertNotNull(criacaoPedidoDTO);
+			double expectedValue = pedidoGeral.getTotalPedido();
+			Assert.assertEquals(expectedValue, criacaoPedidoDTO.getData().getValorTotalPedido(), 0.01);
+
+			// complementa dados do Pedido para utilizar nos outros metodos
+			pedidoGeral.setIdPedido(criacaoPedidoDTO.getData().getCodigoPedido());
+			pedidoGeral.setIdPedidoParceiro(criacaoPedidoDTO.getData().getPedidoParceiro());
 		} catch (ApiException e) {
 			fail(printErrorApi(e, "testPostCriarPedido"));
 		} catch (Exception e) {
@@ -131,13 +219,14 @@ public class PedidoApiTest {
 	}
 
 	@Test
-	public void testPostCriarPedidoPagCartao() {
+	@Order(4)
+	void testPostCriarPedidoPagCartao() {
 		// Produto
 		PedidoProdutoDto produto = new PedidoProdutoDto();
-		produto.setIdLojista(15);
-		produto.setCodigo(9342200);
+		produto.setIdLojista(ID_LOJISTA);
+		produto.setCodigo(pedidoGeralComCartao.getIdSku());
 		produto.setQuantidade(1);
-		produto.setPrecoVenda(119.90);
+		produto.setPrecoVenda(pedidoGeralComCartao.getPrecoVenda());
 		List<PedidoProdutoDto> produtos = Arrays.asList(produto);
 
 		// endereco Entrega
@@ -164,10 +253,10 @@ public class PedidoApiTest {
 		CriacaoPedidoRequest pedido = new CriacaoPedidoRequest();
 		int idPedidoParceiro = new Random().nextInt(65536);
 		idPedidoParceiro = idPedidoParceiro < 0 ? idPedidoParceiro * -1 : idPedidoParceiro;
-		pedido.setCampanha(5940);
-		pedido.setCnpj("57.822.975/0001-12");
+		pedido.setCampanha(ID_CAMPANHA);
+		pedido.setCnpj(CNPJ);
 		pedido.setPedidoParceiro(idPedidoParceiro);
-		pedido.setValorFrete(15.90);
+		pedido.setValorFrete(pedidoGeralComCartao.valorFrete);
 		pedido.setAguardarConfirmacao(true);
 		pedido.setOptantePeloSimples(true);
 		pedido.setPossuiPagtoComplementar(true);
@@ -208,7 +297,7 @@ public class PedidoApiTest {
 
 		// dados entrega
 		EntregaDadosDto dadosEntrega = new EntregaDadosDto();
-		dadosEntrega.setValorFrete(15.90);
+		dadosEntrega.setValorFrete(pedidoGeralComCartao.getValorFrete());
 
 		// endereco cobranca
 		EnderecoCobrancaDto enderecoCobranca = new EnderecoCobrancaDto();
@@ -237,89 +326,94 @@ public class PedidoApiTest {
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
 			criacaoPedidoDTO = pedidoApi.postCriarPedido(pedido);
-			Assert.assertNotNull(criacaoPedidoDTO);
+			double valueExpected = pedidoGeralComCartao.getTotalPedido();
+			Assert.assertEquals(valueExpected, criacaoPedidoDTO.getData().getValorTotalPedido(), 0);
+
+			// complementa dados do Pedido para utilizar nos outros metodos
+			pedidoGeralComCartao.setIdPedido(criacaoPedidoDTO.getData().getCodigoPedido());
+			pedidoGeralComCartao.setIdPedidoParceiro(criacaoPedidoDTO.getData().getPedidoParceiro());
+
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testPostCriarPedidoPagCartao"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testPatchPedidosCancelamento() {
+	@Order(5)
+	void testPatchPedidosCancelamento() {
 		Map<String, String> variableParams = new HashMap<>();
-		variableParams.put("idCompra", "228682072");
+		variableParams.put("idCompra", pedidoGeral.getIdPedido().toString());
 
 		ConfirmacaoReqDTO dto = new ConfirmacaoReqDTO();
-		dto.setIdCampanha(5940);
-		dto.setIdPedidoParceiro(551226);
+		dto.setIdCampanha(ID_CAMPANHA);
+		dto.setIdPedidoParceiro(pedidoGeral.getIdPedidoParceiro());
 		dto.setCancelado(true);
-//		dto.setIdPedidoMktplc("1-01");
-//		dto.setCancelado(true);
-//		dto.setMotivoCancelamento("teste");
-//		dto.setParceiro("BANCO INTER");
+		dto.setConfirmado(false);
+		dto.setIdPedidoMktplc("1-01");
+		dto.setMotivoCancelamento("teste");
+		dto.setParceiro("BANCO INTER");
 
 		ConfirmacaoDTO confirmacaoDto;
 		try {
 			confirmacaoDto = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
 			Assert.assertTrue(confirmacaoDto.getData().getPedidoCancelado());
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testPatchPedidosCancelamento"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testPatchPedidosConfirmacao() {
+	@Order(6)
+	void testPatchPedidosConfirmacao() {
 		Map<String, String> variableParams = new HashMap<>();
-		variableParams.put("idCompra", "228682072");
+		variableParams.put("idCompra", pedidoGeralComCartao.getIdPedido().toString());
 
 		ConfirmacaoReqDTO dto = new ConfirmacaoReqDTO();
-		dto.setIdCampanha(5940);
-		dto.setIdPedidoParceiro(551226);
+		dto.setIdCampanha(ID_CAMPANHA);
+		dto.setIdPedidoParceiro(pedidoGeralComCartao.getIdPedidoParceiro());
 		dto.setConfirmado(true);
-//		dto.setIdPedidoMktplc("1-01");
-//		dto.setCancelado(true);
-//		dto.setMotivoCancelamento("teste");
-//		dto.setParceiro("BANCO INTER");
 
 		ConfirmacaoDTO confirmacaoDto;
 		try {
 			confirmacaoDto = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
 			Assert.assertTrue(confirmacaoDto.getData().getPedidoConfirmado());
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testPatchPedidosConfirmacao"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testGetDadosPedidoParceiroWithSucess() {
-		final int CODIGO_PEDIDO = 270273478;
+	@Order(7)
+	void testGetDadosPedidoParceiro() {
 		Map<String, String> pathParams = new HashMap<>();
-		pathParams.put("idCompra", String.valueOf(CODIGO_PEDIDO));
+		pathParams.put("idCompra", pedidoGeral.getIdPedido().toString());
 
 		Map<String, String> queryParams = new HashMap<>();
-		queryParams.put("request.idCompra", "270273478");
-		queryParams.put("request.cnpj", "57.822.975/0001-12");
-		queryParams.put("request.idCampanha", "5940");
-		queryParams.put("request.idPedidoParceiro", "3222981219");
+		queryParams.put("request.idCompra", pedidoGeral.getIdPedido().toString());
+		queryParams.put("request.cnpj", CNPJ);
+		queryParams.put("request.idCampanha", String.valueOf(ID_CAMPANHA));
+		queryParams.put("request.idPedidoParceiro", pedidoGeral.getIdPedidoParceiro().toString());
 
 		PedidoParceiroData pedido;
 		try {
 			pedido = pedidoApi.getDadosPedidoParceiro(pathParams, queryParams);
-			Assert.assertEquals(CODIGO_PEDIDO, pedido.getData().getPedido().getCodigoPedido());
+			Assert.assertEquals(pedidoGeral.getIdPedido().intValue(), pedido.getData().getPedido().getCodigoPedido());
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testGetDadosPedidoParceiro"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
 	}
 
 	@Test
-	public void testGetNotaFiscalPedidoWithSucess() {
+	@Order(8)
+	void testGetNotaFiscalPedidoPdf() {
 		Map<String, String> pathParams = new HashMap<>();
 		pathParams.put("idCompra", "247473612");
 		pathParams.put("idCompraEntrega", "91712686");
@@ -330,7 +424,7 @@ public class PedidoApiTest {
 			response = pedidoApi.getNotaFiscalPedido(pathParams);
 			Assert.assertNotNull("Response nulo", response);
 		} catch (ApiException e) {
-			fail(printErrorApi(e, "testPostCriarPedido"));
+			fail(printErrorApi(e, "testGetNotaFiscalPedidoPdf"));
 		} catch (Exception e) {
 			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
 		}
@@ -340,5 +434,73 @@ public class PedidoApiTest {
 		return String.format(
 				"Falha. Uma exceção ApiException não deveria ser lançada!\nApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s",
 				method, e.getCode(), e.getMessage(), e.getResponseBody(), e.getResponseHeaders());
+	}
+
+	private DadosPedido preparePedido(CalculoCarrinho calculoCarrinho) {
+		DadosPedido dadosProduto = new DadosPedido();
+		dadosProduto.setIdSku(calculoCarrinho.getData().getProdutos().get(0).getIdSku());
+		dadosProduto.setPrecoVenda(calculoCarrinho.getData().getProdutos().get(0).getValorUnitario());
+		dadosProduto.setValorFrete(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete());
+		return dadosProduto;
+	}
+
+	/**
+	 * Classe interna utilizada para guardar os dados os pedidos gerados para serem
+	 * utilizados nos outros metodos dependentes.
+	 * 
+	 * @author Marcos
+	 *
+	 */
+	private static class DadosPedido {
+		private Integer idPedido;
+		private Integer idPedidoParceiro;
+		private Integer idSku;
+		private double valorFrete;
+		private double precoVenda;
+
+		public double getTotalPedido() {
+			return valorFrete + precoVenda;
+		}
+
+		public Integer getIdSku() {
+			return idSku;
+		}
+
+		public void setIdSku(Integer idSku) {
+			this.idSku = idSku;
+		}
+
+		public double getValorFrete() {
+			return valorFrete;
+		}
+
+		public void setValorFrete(double valorFrete) {
+			this.valorFrete = valorFrete;
+		}
+
+		public double getPrecoVenda() {
+			return precoVenda;
+		}
+
+		public void setPrecoVenda(double precoVenda) {
+			this.precoVenda = precoVenda;
+		}
+
+		public Integer getIdPedido() {
+			return idPedido;
+		}
+
+		public void setIdPedido(Integer idPedido) {
+			this.idPedido = idPedido;
+		}
+
+		public Integer getIdPedidoParceiro() {
+			return idPedidoParceiro;
+		}
+
+		public void setIdPedidoParceiro(Integer idPedidoParceiro) {
+			this.idPedidoParceiro = idPedidoParceiro;
+		}
+
 	}
 }

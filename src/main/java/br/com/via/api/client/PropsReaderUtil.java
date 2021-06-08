@@ -3,37 +3,47 @@ package br.com.via.api.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PropsReaderUtil {
-	private static InputStream inputStream;
-	
-	
-	public String getHost()  {
+	private static final Logger LOGGER = Logger.getLogger(PropsReaderUtil.class.getName());
+	private String fileName = "config.properties";
+
+	public String getHost() {
 		return getSingleProp("host");
 	}
-	
-	public String getToken()  {
+
+	public String getToken() {
 		return getSingleProp("token");
 	}
 
-	private String getSingleProp(String propertieName) {
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public String getSingleProp(String propertieName) {
 		String token = null;
 		try {
-			 token = getProp().getProperty(propertieName);
+			token = getProp().getProperty(propertieName);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, null, e);
 		}
 		return token;
 	}
-	
+
 	private Properties getProp() throws IOException {
 		Properties prop = new Properties();
-		String propFileName = "config.properties";
-		inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
 		try {
 			prop.load(inputStream);
 		} catch (Exception e) {
-			System.out.println("Exception: " + e);
+			LOGGER.log(Level.SEVERE, null, e);
 		} finally {
 			inputStream.close();
 		}

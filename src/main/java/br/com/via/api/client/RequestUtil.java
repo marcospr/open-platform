@@ -160,8 +160,9 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		}
 	
 	private void validarResponse(Response response) throws ApiException {
-		if (response != null && response.getStatusInfo().getFamily() == Family.SERVER_ERROR
-				|| response.getStatusInfo().getFamily() == Family.CLIENT_ERROR) {
+		if (response != null && response.getStatusInfo() != null
+				&& (response.getStatusInfo().getFamily() == Family.SERVER_ERROR
+				|| response.getStatusInfo().getFamily() == Family.CLIENT_ERROR)) {
 			String message = response.getStatusInfo().getReasonPhrase();
 			String respBody = null;
 			if (response.hasEntity()) {

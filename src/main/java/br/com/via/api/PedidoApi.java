@@ -13,24 +13,31 @@ import br.com.via.api.model.response.CriacaoPedidoDTO;
 import br.com.via.api.model.response.PedidoParceiroData;
 
 public class PedidoApi {
-	private RequestUtil<PedidoCarrinho, CalculoCarrinho> requestUtilPedidoCarrinho = new RequestUtil<PedidoCarrinho, CalculoCarrinho>(
-			CalculoCarrinho.class);
-	private RequestUtil<?, PedidoParceiroData> requestUtilPedidoParceiro = new RequestUtil<>(PedidoParceiroData.class);
-	private RequestUtil<ConfirmacaoReqDTO, ConfirmacaoDTO> requestUtilConfirmacaoReqDTO = new RequestUtil<>(
-			ConfirmacaoDTO.class);
-	private RequestUtil<String, String> requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
-	private RequestUtil<CriacaoPedidoRequest, CriacaoPedidoDTO> requestUtilCriacaoPedido = new RequestUtil<>(
-			CriacaoPedidoDTO.class);
+	private RequestUtil<PedidoCarrinho, CalculoCarrinho> requestUtilPedidoCarrinho;
+
+	private RequestUtil<?, PedidoParceiroData> requestUtilPedidoParceiro;
+
+	private RequestUtil<ConfirmacaoReqDTO, ConfirmacaoDTO> requestUtilConfirmacaoReqDTO;
+
+	private RequestUtil<String, String> requestUtilNotaFiscalPedido;
+
+	private RequestUtil<CriacaoPedidoRequest, CriacaoPedidoDTO> requestUtilCriacaoPedido;
 
 	private String basePath;
+
 	private String authorization;
 
 	public PedidoApi(String basePath, String authorization) {
 		this.basePath = basePath;
 		this.authorization = authorization;
+		requestUtilPedidoCarrinho = new RequestUtil<>(CalculoCarrinho.class);
+		requestUtilPedidoParceiro = new RequestUtil<>(PedidoParceiroData.class);
+		requestUtilConfirmacaoReqDTO = new RequestUtil<>(ConfirmacaoDTO.class);
+		requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
+		requestUtilCriacaoPedido = new RequestUtil<>(CriacaoPedidoDTO.class);
 	}
 
-	public CalculoCarrinho postPedidosCarrinho(PedidoCarrinho pedidosCarrinho) throws ApiException {
+	public CalculoCarrinho postCalcularCarrinho(PedidoCarrinho pedidosCarrinho) throws ApiException {
 		// verify the required parameter
 		if (pedidosCarrinho == null) {
 			throw new ApiException(400,

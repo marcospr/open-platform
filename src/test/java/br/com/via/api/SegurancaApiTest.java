@@ -1,21 +1,23 @@
 package br.com.via.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-import org.junit.Before;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.ChaveDTO;
 
 public class SegurancaApiTest {
-	private SegurancaApi segurancaApi;
+	private static SegurancaApi segurancaApi;
 	
-	@Before
-	public void init() {
+	@BeforeAll
+	public static void init() {
 		segurancaApi = new SegurancaApi();
 	}
 	
