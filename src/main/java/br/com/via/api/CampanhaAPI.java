@@ -30,7 +30,7 @@ public class CampanhaAPI {
 		return requestUtilCampanha.get(basePath + "/campanhas", authorization, queryParams);
 	}
 	
-	public OpcoesParcelamentoDTO getOpcoesParcelamento(Long idCampanha, String cnpj) throws ApiException {
+	public OpcoesParcelamentoDTO getOpcoesParcelamento(String idCampanha, String cnpj) throws ApiException {
 		Map<String, String> queryParams = new HashMap<String, String>();
 		queryParams.put("cnpj", cnpj);
 		return requestUtilParcelamento.get(basePath + "/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", authorization, queryParams);
