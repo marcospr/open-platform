@@ -44,6 +44,7 @@ import br.com.via.api.model.response.PedidoParceiroData;
 @TestMethodOrder(OrderAnnotation.class)
 class PedidoApiTest {
 
+
 	/** Instancia do client API. */
 	private static PedidoApi pedidoApi;
 
@@ -58,6 +59,9 @@ class PedidoApiTest {
 
 	/** Host do servico do Ponto Frio. */
 	// private static final String HOST_PONTO = "";
+
+	/** CEP padrao dos testes */
+	private static final String CEP = "01525000";
 
 	/** Id Lojista padrao dos testes. */
 	private static final int ID_LOJISTA = 15;
@@ -103,7 +107,7 @@ class PedidoApiTest {
 
 		pedidoCarrinho.setIdCampanha(ID_CAMPANHA);
 		pedidoCarrinho.setCnpj(CNPJ);
-		pedidoCarrinho.setCep("01525000");
+		pedidoCarrinho.setCep(CEP);
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
 
 		CalculoCarrinho calculoCarrinho;
@@ -133,7 +137,7 @@ class PedidoApiTest {
 
 		pedidoCarrinho.setIdCampanha(ID_CAMPANHA);
 		pedidoCarrinho.setCnpj(CNPJ);
-		pedidoCarrinho.setCep("01525000");
+		pedidoCarrinho.setCep(CEP);
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
 
 		CalculoCarrinho calculoCarrinho;
@@ -195,8 +199,7 @@ class PedidoApiTest {
 		pedido.setDadosEntrega(dadosEntrega);
 		pedido.setCampanha(ID_CAMPANHA);
 		pedido.setCnpj(CNPJ);
-		int idPedidoParceiro = new Random().nextInt(65536);
-		idPedidoParceiro = idPedidoParceiro < 0 ? idPedidoParceiro * -1 : idPedidoParceiro;
+		int idPedidoParceiro = geraPedidoParceiroId();
 		pedido.setPedidoParceiro(idPedidoParceiro);
 		pedido.setValorFrete(pedidoGeral.getValorFrete());
 		pedido.setAguardarConfirmacao(true);
@@ -231,7 +234,7 @@ class PedidoApiTest {
 
 		// endereco Entrega
 		EnderecoEntregaDto enderecoEntrega = new EnderecoEntregaDto();
-		enderecoEntrega.setCep("01525000");
+		enderecoEntrega.setCep(CEP);
 		enderecoEntrega.setEstado("SP");
 		enderecoEntrega.setLogradouro("rua da se");
 		enderecoEntrega.setCidade("São Paulo");
@@ -251,8 +254,7 @@ class PedidoApiTest {
 
 		// pedido
 		CriacaoPedidoRequest pedido = new CriacaoPedidoRequest();
-		int idPedidoParceiro = new Random().nextInt(65536);
-		idPedidoParceiro = idPedidoParceiro < 0 ? idPedidoParceiro * -1 : idPedidoParceiro;
+		int idPedidoParceiro = geraPedidoParceiroId();
 		pedido.setCampanha(ID_CAMPANHA);
 		pedido.setCnpj(CNPJ);
 		pedido.setPedidoParceiro(idPedidoParceiro);
@@ -442,6 +444,12 @@ class PedidoApiTest {
 		dadosProduto.setPrecoVenda(calculoCarrinho.getData().getProdutos().get(0).getValorUnitario());
 		dadosProduto.setValorFrete(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete());
 		return dadosProduto;
+	}
+
+	private int geraPedidoParceiroId() {
+		int idPedidoParceiro = new Random().nextInt(65536);
+		idPedidoParceiro = idPedidoParceiro < 0 ? idPedidoParceiro * -1 : idPedidoParceiro;
+		return idPedidoParceiro;
 	}
 
 	/**
