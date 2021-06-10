@@ -32,6 +32,7 @@ import br.com.via.api.model.response.CalculoCarrinho;
 import br.com.via.api.model.response.ConfirmacaoDTO;
 import br.com.via.api.model.response.CriacaoPedidoDTO;
 import br.com.via.api.model.response.PedidoParceiroData;
+import br.com.via.api.security.Encryptor;
 
 /**
  * Classe de testes para as URI's dos Pedidos do B2B.</br>
@@ -43,7 +44,6 @@ import br.com.via.api.model.response.PedidoParceiroData;
  */
 @TestMethodOrder(OrderAnnotation.class)
 class PedidoApiTest {
-
 
 	/** Instancia do client API. */
 	private static PedidoApi pedidoApi;
@@ -90,9 +90,23 @@ class PedidoApiTest {
 	 */
 	private static DadosPedido pedidoGeralComCartao;
 
+	/**
+	 * Chave pública 2048 bits utilizada para criptografia dos dados do cartão.</br>
+	 * Pode ser obtida pelo endpoint Rest abaixo.
+	 * 
+	 * @see http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Seguranca/Seguranca_ObterChave
+	 * 
+	 */
+	private static final String CHAVE_PUBLICA = "MIIENTCCAx2gAwIBAgIJAJ5ApEGl2oaIMA0GCSqGSIb3DQEBBQUAMIGwMQswCQYDVQQGEwJCUjELMAkGA1UECAwCU1AxFDASBgNVBAcMC1NBTyBDQUVUQU5PMRMwEQYDVQQKDApWSUEgVkFSRUpPMSAwHgYDVQQLDBdTRUdVUkFOQ0EgREEgSU5GT1JNQUNBTzEOMAwGA1UEAwwFUFJPWFkxNzA1BgkqhkiG9w0BCQEWKHRpLnNlZ3VyYW5jYS5pbmZvcm1hY2FvQHZpYXZhcmVqby5jb20uYnIwHhcNMTgwODE2MTIzNjQ2WhcNMjEwODE1MTIzNjQ2WjCBsDELMAkGA1UEBhMCQlIxCzAJBgNVBAgMAlNQMRQwEgYDVQQHDAtTQU8gQ0FFVEFOTzETMBEGA1UECgwKVklBIFZBUkVKTzEgMB4GA1UECwwXU0VHVVJBTkNBIERBIElORk9STUFDQU8xDjAMBgNVBAMMBVBST1hZMTcwNQYJKoZIhvcNAQkBFih0aS5zZWd1cmFuY2EuaW5mb3JtYWNhb0B2aWF2YXJlam8uY29tLmJyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqObNb7KAP09WsV9h76Dw3tj2qa3l97K+slfzLkOBvi0xjacuKCnvsMSGEBosvWY/qNmSLE1YaoyFt7ZaeOiALKh2AFckJRM+/zvQzqi6cPnW0cGsEE/9WO48Fgh894pKjHpukATFb9tBYGTBEW46AH2WiAR735KEnDfFAHG//pkLKriPWEZBr9tf4gdNvyJ/ybs5JrBRU1RKE9MM7qnMkCouKTPwY/lS/2Xb1IYkyZulCf3Uyl7zpB6hQUhprS1R5meRocpGgHJCFfiWD/uXa5nREuGuQxcImwzvf+enwT6CooRoM2rN6IQWSY+uQ64dhSt4FMajZFmHVpLfUIOjEwIDAQABo1AwTjAdBgNVHQ4EFgQUZ22K62aMm/lI5LfblgINPvz8ae8wHwYDVR0jBBgwFoAUZ22K62aMm/lI5LfblgINPvz8ae8wDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEAj23IDXLPkQpFDbgAtgKuO9N66o61edbJ1+BMjdSsfO0vMVpmBDlKdinxlh509/qJm/WLYswKkKOi7VHojBSV5HyrO5YGCSJFvVGJqF4JUxy7GrWTHqgwcylmX5B5lNd5aMIxwG6AF4o2cp6IPe+Uwaroa8kLTrtM0eRgAInHbQA7MXbvOZY+pzE4s6jFbA1O321zVg4C4Y3C4e30yf9YJNK5XjUP26duvwGqQrZg49ZU3W/t6GYY1kQhSeBG0FPg2GOIHX03WPZpaJ7i1uCv6Ial07pxDxqcT8oCJalY9tW9sv7zBJRaJgTIf5oz5jElb9kWd2D6XwaGB5PJfD6CTQ==";
+
+	/** Atributo auxiliar para os testes de criacao de pedido. */
+	private static DadosCartaoHelper dadosCartaoHelper;
+
 	@BeforeAll
 	public static void init() {
 		pedidoApi = new PedidoApi(HOST_EXTRA, AUTHORIZATION_TOKEN);
+		dadosCartaoHelper = new DadosCartaoHelper(new Encryptor(CHAVE_PUBLICA), "Jose da Silva", "5155901222280001",
+				"1234", "2045", "12");
 	}
 
 	@Test
@@ -269,27 +283,51 @@ class PedidoApiTest {
 
 		// dados cartao credito
 		CartaoCreditoDadosDto cartaoCreditoDadosDto = new CartaoCreditoDadosDto();
-		cartaoCreditoDadosDto.setNome(
-				"qrTvioqjqt2lLiAkzp8ERtKAIglq9PI9FyDh8eVtuoWZvtVFRHKBzidIxCCELAluS+65QpyO1u4kTruGMyzyj++QtJT9MI0si0gFy9euz4GvCz6sl8+yx3GnJ5u6H9D3O3DugfWM4Gl3Lq6CPjT+qSjrYKul7qKkAR395rXlKLgxv3ENtSqMe+ttE60/yDmGVboP6d/wG7Wr5IDwzWUz6VD6nw3aU584rJ4B6jUwnAENA12xKPGOpI/XlcrbkpJw5Gz4XBveWkB/C+m4fY1cLT6LRJXXAJx9h2flvtSA8J1XPvDdbsKX9IhIYs7H88Z/t3LTTmTjEVcxeE56kA1feg==");
-		cartaoCreditoDadosDto.setNumero(
-				"bsDiir5JMhpB3RCGu5IVF2FvvBMq+eoyva/T71B5HGff7/x0Wz9y3Q98UBWVJ9z8jm/y7TnqxrP7PFGbBwlVEg09aQbSpOCMGpe7TBgjPUH6mteioKVA3bDeBhOURtoqRnzMoXYFbMV1xsaMJBZxxCAZkywdN4h+G2np5/OlRxYXhKgNIvUMUWgtL2zsN0EOnVEajtoO3K+A4CpmO480SqhlggKo6U64464ZaIYxLRb9ajONiaLNtZLYK4WorclAnQDQWOMUP8w75zd/Y/DF8S/pGflAy8ElCFbd0Kuramxb9IVPxIXosZa4C+PSvplht6tjgBKfHk83NzaQxxiVnA==");
-		cartaoCreditoDadosDto.setCodigoVerificador(
-				"NPFWj2Fo5jazlTV6O/ouNkTOU6h+/RSP2d0fvVryXtOm4PliK1MQT6TdaEKEdw1fkTg2Zzt0tr2qFgZvCq1nKewsS4SfRAUBLCQEJSF0JkzS42PV2HIEt8zTq2Y/iIT2AOowrM0NPztcFOmsuNvoIqt5GbqMpNpalRZrN9gHsjeDPjwdUrnI+3vUL8w1g9YQYgGUG+9P6ZzPrZsz0YQN4znchaU34hnSW6ojl83pu2xMn/HfCA3wGOJM3DWT7eDfplbOYOWWjzUGz3/HVI/bpv0H/4hyHimLK6eZP5Wa7EqBKxB0B3G9bbDMBzujZluQ3wemEhgfOX/LVi91l7NIGQ==");
-		cartaoCreditoDadosDto.setValidadeAno(
-				"jvBw0BkvEiYea/rBtjCzpP+/sa4Paha3SYGSeGdn7zDmwQqq65PH8fhIRNA9Sxhz+MrH4o+vuahhygGYpoPksk5rgd3EMGmwQHDOegasFabuW/SEr2ZrXQ4gLv+UTYY0MLgPX1D7OM/sBmdgQ/OdFT9mFvTpTRmAOWqmXM7I9TiG5MscVjnWInBHljmLCDL55JxWPqEYmis05RTaDDCFwhxob30ygrg6qfGTvVLUDKbNn6OGOiR6XMgajQWJySIrM1cW1wdKxElgqK1RxDXTBBdaTSTNf5nekMI16bRFzE0YUET5L28+OvySc5nQMta2FgykXxvY8o+fnb8ZxAF3FA==");
-		cartaoCreditoDadosDto.setValidadeMes(
-				"mDAyCqkh1mK1Mg/FuJCJ5jgjk4qC5mh/viINHvpXtqLLBTVtum8qZLtND9TkEXOdJNOSH+NCiDkvGWt2t3SuU+YfUi85WuIfR7UcAc8Zpo+n4T5upd5iz2y7H58cWu+4NqyZl35gpr8nlzKZXznIR8HIYkTD431GgBEGD3KouWxT+zUssmckSSgru7wEbI9aL9OE4cgMO0hFOciB5ZYGmZXM9iCYjqeXR1r6g08zMMFtjDJV4P9yKCy4vqxvyZ1Dt5MNBHOJ//549RQxMzj2h/Xl8JdMGrFEPnKBnAIP1yqqDP22aF8HyHsLkEPUVJwJz/mKlHw0itSzSfcEWOg/Sg==");
+
+		String encryptedName = dadosCartaoHelper.getEncryptedName();
+		String encryptedNumber = dadosCartaoHelper.getEncryptedNumber();
+		String encryptedVerifyCode = dadosCartaoHelper.getEncryptedVerifyCode();
+		String encryptedValidateYear = dadosCartaoHelper.getEncryptedValidateYear();
+		String encryptedValidateMonth = dadosCartaoHelper.getEncryptedValidateMonth();
+
+		cartaoCreditoDadosDto.setNome(encryptedName);
+		cartaoCreditoDadosDto.setNumero(encryptedNumber);
+		cartaoCreditoDadosDto.setCodigoVerificador(encryptedVerifyCode);
+		cartaoCreditoDadosDto.setValidadeAno(encryptedValidateYear);
+		cartaoCreditoDadosDto.setValidadeMes(encryptedValidateMonth);
+
+		/*
+		 * cartaoCreditoDadosDto.setNome(
+		 * "qrTvioqjqt2lLiAkzp8ERtKAIglq9PI9FyDh8eVtuoWZvtVFRHKBzidIxCCELAluS+65QpyO1u4kTruGMyzyj++QtJT9MI0si0gFy9euz4GvCz6sl8+yx3GnJ5u6H9D3O3DugfWM4Gl3Lq6CPjT+qSjrYKul7qKkAR395rXlKLgxv3ENtSqMe+ttE60/yDmGVboP6d/wG7Wr5IDwzWUz6VD6nw3aU584rJ4B6jUwnAENA12xKPGOpI/XlcrbkpJw5Gz4XBveWkB/C+m4fY1cLT6LRJXXAJx9h2flvtSA8J1XPvDdbsKX9IhIYs7H88Z/t3LTTmTjEVcxeE56kA1feg=="
+		 * ); cartaoCreditoDadosDto.setNumero(
+		 * "bsDiir5JMhpB3RCGu5IVF2FvvBMq+eoyva/T71B5HGff7/x0Wz9y3Q98UBWVJ9z8jm/y7TnqxrP7PFGbBwlVEg09aQbSpOCMGpe7TBgjPUH6mteioKVA3bDeBhOURtoqRnzMoXYFbMV1xsaMJBZxxCAZkywdN4h+G2np5/OlRxYXhKgNIvUMUWgtL2zsN0EOnVEajtoO3K+A4CpmO480SqhlggKo6U64464ZaIYxLRb9ajONiaLNtZLYK4WorclAnQDQWOMUP8w75zd/Y/DF8S/pGflAy8ElCFbd0Kuramxb9IVPxIXosZa4C+PSvplht6tjgBKfHk83NzaQxxiVnA=="
+		 * ); cartaoCreditoDadosDto.setCodigoVerificador(
+		 * "NPFWj2Fo5jazlTV6O/ouNkTOU6h+/RSP2d0fvVryXtOm4PliK1MQT6TdaEKEdw1fkTg2Zzt0tr2qFgZvCq1nKewsS4SfRAUBLCQEJSF0JkzS42PV2HIEt8zTq2Y/iIT2AOowrM0NPztcFOmsuNvoIqt5GbqMpNpalRZrN9gHsjeDPjwdUrnI+3vUL8w1g9YQYgGUG+9P6ZzPrZsz0YQN4znchaU34hnSW6ojl83pu2xMn/HfCA3wGOJM3DWT7eDfplbOYOWWjzUGz3/HVI/bpv0H/4hyHimLK6eZP5Wa7EqBKxB0B3G9bbDMBzujZluQ3wemEhgfOX/LVi91l7NIGQ=="
+		 * ); cartaoCreditoDadosDto.setValidadeAno(
+		 * "jvBw0BkvEiYea/rBtjCzpP+/sa4Paha3SYGSeGdn7zDmwQqq65PH8fhIRNA9Sxhz+MrH4o+vuahhygGYpoPksk5rgd3EMGmwQHDOegasFabuW/SEr2ZrXQ4gLv+UTYY0MLgPX1D7OM/sBmdgQ/OdFT9mFvTpTRmAOWqmXM7I9TiG5MscVjnWInBHljmLCDL55JxWPqEYmis05RTaDDCFwhxob30ygrg6qfGTvVLUDKbNn6OGOiR6XMgajQWJySIrM1cW1wdKxElgqK1RxDXTBBdaTSTNf5nekMI16bRFzE0YUET5L28+OvySc5nQMta2FgykXxvY8o+fnb8ZxAF3FA=="
+		 * ); cartaoCreditoDadosDto.setValidadeMes(
+		 * "mDAyCqkh1mK1Mg/FuJCJ5jgjk4qC5mh/viINHvpXtqLLBTVtum8qZLtND9TkEXOdJNOSH+NCiDkvGWt2t3SuU+YfUi85WuIfR7UcAc8Zpo+n4T5upd5iz2y7H58cWu+4NqyZl35gpr8nlzKZXznIR8HIYkTD431GgBEGD3KouWxT+zUssmckSSgru7wEbI9aL9OE4cgMO0hFOciB5ZYGmZXM9iCYjqeXR1r6g08zMMFtjDJV4P9yKCy4vqxvyZ1Dt5MNBHOJ//549RQxMzj2h/Xl8JdMGrFEPnKBnAIP1yqqDP22aF8HyHsLkEPUVJwJz/mKlHw0itSzSfcEWOg/Sg=="
+		 * );
+		 */
+
 		cartaoCreditoDadosDto.setQuantidadeParcelas(1);
 
 		pagamentoComplementarDto.setDadosCartaoCredito(cartaoCreditoDadosDto);
 
 		// dados Cartao Credito Validacao
 		CartaoCreditoDadosValidacaoDto cartaoCreditoDadosValidacaoDto = new CartaoCreditoDadosValidacaoDto();
-		cartaoCreditoDadosValidacaoDto.setNome("Jose da Silva");
+		cartaoCreditoDadosValidacaoDto.setNome(dadosCartaoHelper.getNome());
 		cartaoCreditoDadosValidacaoDto.setNumeroMascarado("341235xxxxxx1885");
 		cartaoCreditoDadosValidacaoDto.setQtCaracteresCodigoVerificador("4");
-		cartaoCreditoDadosValidacaoDto.setValidadeAno("2025");
-		cartaoCreditoDadosValidacaoDto.setValidadeMes("10");
+		cartaoCreditoDadosValidacaoDto.setValidadeAno(dadosCartaoHelper.getAnoValidade());
+		cartaoCreditoDadosValidacaoDto.setValidadeMes(dadosCartaoHelper.getMesValidade());
+		/*
+		 * cartaoCreditoDadosValidacaoDto.setNome("Jose da Silva");
+		 * cartaoCreditoDadosValidacaoDto.setNumeroMascarado("341235xxxxxx1885");
+		 * cartaoCreditoDadosValidacaoDto.setQtCaracteresCodigoVerificador("4");
+		 * cartaoCreditoDadosValidacaoDto.setValidadeAno("2025");
+		 * cartaoCreditoDadosValidacaoDto.setValidadeMes("10");
+		 */
 
 		pagamentoComplementarDto.setDadosCartaoCreditoValidacao(cartaoCreditoDadosValidacaoDto);
 
@@ -470,28 +508,28 @@ class PedidoApiTest {
 			return valorFrete + precoVenda;
 		}
 
-		public Integer getIdSku() {
-			return idSku;
-		}
-
 		public void setIdSku(Integer idSku) {
 			this.idSku = idSku;
 		}
 
-		public double getValorFrete() {
-			return valorFrete;
+		public Integer getIdSku() {
+			return idSku;
 		}
 
 		public void setValorFrete(double valorFrete) {
 			this.valorFrete = valorFrete;
 		}
 
-		public double getPrecoVenda() {
-			return precoVenda;
+		public double getValorFrete() {
+			return valorFrete;
 		}
 
 		public void setPrecoVenda(double precoVenda) {
 			this.precoVenda = precoVenda;
+		}
+
+		public double getPrecoVenda() {
+			return precoVenda;
 		}
 
 		public Integer getIdPedido() {
@@ -502,12 +540,80 @@ class PedidoApiTest {
 			this.idPedido = idPedido;
 		}
 
+		public void setIdPedidoParceiro(Integer idPedidoParceiro) {
+			this.idPedidoParceiro = idPedidoParceiro;
+		}
+
 		public Integer getIdPedidoParceiro() {
 			return idPedidoParceiro;
 		}
 
-		public void setIdPedidoParceiro(Integer idPedidoParceiro) {
-			this.idPedidoParceiro = idPedidoParceiro;
+	}
+
+	/**
+	 * Classe para dados do cartao credito.
+	 * 
+	 * @author Marcos P. da Rocha
+	 *
+	 */
+	private static class DadosCartaoHelper {
+
+		private Encryptor encryptor;
+		private String nome;
+		private String numero;
+		private String codigoVerificador;
+		private String anoValidade;
+		private String mesValidade;
+
+		public DadosCartaoHelper(Encryptor encryptor, String nome, String numero, String codigoVerificador,
+				String anoValidade,
+				String mesValidade) {
+			this.encryptor = encryptor;
+			this.nome = nome;
+			this.numero = numero;
+			this.codigoVerificador = codigoVerificador;
+			this.anoValidade = anoValidade;
+			this.mesValidade = mesValidade;
+		}
+
+		public String getEncryptedName() {
+			return encryptor.encript(nome);
+		}
+
+		public String getEncryptedNumber() {
+			return encryptor.encript(numero);
+		}
+
+		public String getEncryptedVerifyCode() {
+			return encryptor.encript(codigoVerificador);
+		}
+
+		public String getEncryptedValidateYear() {
+			return encryptor.encript(anoValidade);
+		}
+
+		public String getEncryptedValidateMonth() {
+			return encryptor.encript(mesValidade);
+		}
+
+		public String getNome() {
+			return nome;
+		}
+
+		public String getNumero() {
+			return numero;
+		}
+
+		public String getCodigoVerificador() {
+			return codigoVerificador;
+		}
+
+		public String getAnoValidade() {
+			return anoValidade;
+		}
+
+		public String getMesValidade() {
+			return mesValidade;
 		}
 
 	}
