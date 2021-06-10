@@ -258,7 +258,7 @@ class PedidoApiTest {
 		pedido.setCampanha(ID_CAMPANHA);
 		pedido.setCnpj(CNPJ);
 		pedido.setPedidoParceiro(idPedidoParceiro);
-		pedido.setValorFrete(pedidoGeralComCartao.valorFrete);
+		pedido.setValorFrete(pedidoGeralComCartao.getValorFrete());
 		pedido.setAguardarConfirmacao(true);
 		pedido.setOptantePeloSimples(true);
 		pedido.setPossuiPagtoComplementar(true);
@@ -321,7 +321,7 @@ class PedidoApiTest {
 		pedido.setDadosEntrega(dadosEntrega);
 		pedido.setEnderecoCobranca(enderecoCobranca);
 		pedido.setPagtosComplementares(Arrays.asList(pagamentoComplementarDto));
-		pedido.setValorTotalPedido(135.80);
+		pedido.setValorTotalPedido(pedidoGeralComCartao.getTotalPedido());
 		pedido.setValorTotalComplementar(30.0);
 		pedido.setValorTotalComplementarComJuros(30.0);
 
