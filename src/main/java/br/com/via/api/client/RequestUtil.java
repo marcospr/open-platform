@@ -3,6 +3,8 @@ package br.com.via.api.client;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -16,10 +18,13 @@ import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 
 public class RequestUtil<T1 extends Serializable, T2 extends Serializable> implements Serializable {
 
+	private static final String AUTHORIZATION = "Authorization";
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(RequestUtil.class.getName());
 	
 	private transient Client client;
 	private JsonConverter<T2> tratarRetorno;
+	private boolean exibeInputBody;
 
 	public RequestUtil(Class<T2> clazz2) {
 		this.tratarRetorno = new JsonConverter<>(clazz2);
@@ -49,6 +54,9 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 
 	public T2 post(String path, T1 entityIn) throws ApiException {
 		try {
+			if (isExibeInputBody()) {
+				requestBody(entityIn);
+			}
 			Response response = this.doPost(path, null, entityIn);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
@@ -58,6 +66,9 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 
 	public T2 post(String path, String accessToken, T1 entityIn) throws ApiException {
 		try {
+			if (isExibeInputBody()) {
+				requestBody(entityIn);
+			}
 			Response response = this.doPost(path, accessToken, entityIn);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
@@ -90,7 +101,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
-			response = webTarget.request().header("Authorization", accessToken)
+			response = webTarget.request().header(AUTHORIZATION, accessToken)
 					.post(Entity.json(entityIn));
 		} else {
 			response = webTarget.request().post(Entity.json(entityIn));
@@ -105,7 +116,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		webTarget.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
 		if (accessToken != null) {
 
-			response = webTarget.request().header("Authorization", accessToken).method("PATCH", Entity.json(entityIn));
+			response = webTarget.request().header(AUTHORIZATION, accessToken).method("PATCH", Entity.json(entityIn));
 		} else {
 			response = webTarget.request().method("PATCH", Entity.json(entityIn));
 		}
@@ -122,7 +133,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		
 		WebTarget webTarget = this.createWebTarget(fullPath);
 		if (accessToken != null) {
-			response = webTarget.request().header("Authorization", accessToken).get();
+			response = webTarget.request().header(AUTHORIZATION, accessToken).get();
 		} else {
 			response = webTarget.request().get();
 		}
@@ -152,7 +163,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		webTarget = webTarget.queryParam(parameter, parameterValues.toArray());
 		}
 		if (accessToken != null) {
-			response = webTarget.request().header("Authorization", accessToken).get();
+			response = webTarget.request().header(AUTHORIZATION, accessToken).get();
 		} else {
 			response = webTarget.request().get();
 		}
@@ -176,4 +187,16 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		}
 	}
 
+	private void requestBody(T1 entityIn) {
+		JsonConverter<T1> tratarEntrada = new JsonConverter<T1>((Class<T1>) entityIn.getClass());
+		LOGGER.log(Level.INFO, "payload da requisição: \n{0} ", tratarEntrada.convertToString(entityIn));
+	}
+
+	public void setExibeInputBody(boolean exibeInputBody) {
+		this.exibeInputBody = exibeInputBody;
+	}
+	
+	public boolean isExibeInputBody() {
+		return exibeInputBody;
+	}
 }

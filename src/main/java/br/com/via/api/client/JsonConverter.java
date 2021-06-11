@@ -19,7 +19,7 @@ public class JsonConverter<T extends Serializable> implements Serializable {
 
 	public JsonConverter(Class<T> clazz) {
 		this.gsonBuilder = new GsonBuilder();
-		gson = gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss").create();
+		gson = gsonBuilder.setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting().create();
 		this.clazz = clazz;
 	}
 
