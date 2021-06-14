@@ -1,7 +1,6 @@
 package br.com.via.api;
 
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -13,8 +12,12 @@ import org.junit.jupiter.api.Test;
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.ChaveDTO;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class SegurancaApiTest {
 	private static SegurancaApi segurancaApi;
+	Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
 	@BeforeAll
 	public static void init() {
@@ -25,6 +28,7 @@ public class SegurancaApiTest {
 	public void getChaveTestSucess() {
 		try {
 			ChaveDTO chave = segurancaApi.getChave();
+			System.out.println(gson.toJson(chave));
 			assertNotNull(chave);
 			assertEquals("2018-11-28T13:56:06", chave.getData().getDataCadastro());
 		} catch (ApiException e) {
@@ -41,6 +45,7 @@ public class SegurancaApiTest {
 	public void getChaveTestFail() {
 		try {
 			ChaveDTO chave = segurancaApi.setAuthorization("TOKEN_FALSO_123").getChave();
+			System.out.println(gson.toJson(chave));
 			assertNotNull(chave);
 		} catch (ApiException e) {
 			printErrorApi(e, "testGetCampanhaFail");

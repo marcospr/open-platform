@@ -9,11 +9,8 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.request.CartaoCreditoDadosDto;
@@ -33,6 +30,9 @@ import br.com.via.api.model.response.ConfirmacaoDTO;
 import br.com.via.api.model.response.CriacaoPedidoDTO;
 import br.com.via.api.model.response.PedidoParceiroData;
 import br.com.via.api.security.Encryptor;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Classe de testes para as URI's dos Pedidos do B2B.</br>
@@ -109,13 +109,15 @@ class PedidoApiTest {
 	 * Chave pública 2048 bits utilizada para criptografia dos dados do cartão.</br>
 	 * Pode ser obtida pelo URI Rest abaixo.
 	 * 
-	 * @see http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Seguranca/Seguranca_ObterChave
+	 * http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Seguranca/Seguranca_ObterChave
 	 * 
 	 */
 	private static final String CHAVE_PUBLICA = "MIIENTCCAx2gAwIBAgIJAJ5ApEGl2oaIMA0GCSqGSIb3DQEBBQUAMIGwMQswCQYDVQQGEwJCUjELMAkGA1UECAwCU1AxFDASBgNVBAcMC1NBTyBDQUVUQU5PMRMwEQYDVQQKDApWSUEgVkFSRUpPMSAwHgYDVQQLDBdTRUdVUkFOQ0EgREEgSU5GT1JNQUNBTzEOMAwGA1UEAwwFUFJPWFkxNzA1BgkqhkiG9w0BCQEWKHRpLnNlZ3VyYW5jYS5pbmZvcm1hY2FvQHZpYXZhcmVqby5jb20uYnIwHhcNMTgwODE2MTIzNjQ2WhcNMjEwODE1MTIzNjQ2WjCBsDELMAkGA1UEBhMCQlIxCzAJBgNVBAgMAlNQMRQwEgYDVQQHDAtTQU8gQ0FFVEFOTzETMBEGA1UECgwKVklBIFZBUkVKTzEgMB4GA1UECwwXU0VHVVJBTkNBIERBIElORk9STUFDQU8xDjAMBgNVBAMMBVBST1hZMTcwNQYJKoZIhvcNAQkBFih0aS5zZWd1cmFuY2EuaW5mb3JtYWNhb0B2aWF2YXJlam8uY29tLmJyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqObNb7KAP09WsV9h76Dw3tj2qa3l97K+slfzLkOBvi0xjacuKCnvsMSGEBosvWY/qNmSLE1YaoyFt7ZaeOiALKh2AFckJRM+/zvQzqi6cPnW0cGsEE/9WO48Fgh894pKjHpukATFb9tBYGTBEW46AH2WiAR735KEnDfFAHG//pkLKriPWEZBr9tf4gdNvyJ/ybs5JrBRU1RKE9MM7qnMkCouKTPwY/lS/2Xb1IYkyZulCf3Uyl7zpB6hQUhprS1R5meRocpGgHJCFfiWD/uXa5nREuGuQxcImwzvf+enwT6CooRoM2rN6IQWSY+uQ64dhSt4FMajZFmHVpLfUIOjEwIDAQABo1AwTjAdBgNVHQ4EFgQUZ22K62aMm/lI5LfblgINPvz8ae8wHwYDVR0jBBgwFoAUZ22K62aMm/lI5LfblgINPvz8ae8wDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEAj23IDXLPkQpFDbgAtgKuO9N66o61edbJ1+BMjdSsfO0vMVpmBDlKdinxlh509/qJm/WLYswKkKOi7VHojBSV5HyrO5YGCSJFvVGJqF4JUxy7GrWTHqgwcylmX5B5lNd5aMIxwG6AF4o2cp6IPe+Uwaroa8kLTrtM0eRgAInHbQA7MXbvOZY+pzE4s6jFbA1O321zVg4C4Y3C4e30yf9YJNK5XjUP26duvwGqQrZg49ZU3W/t6GYY1kQhSeBG0FPg2GOIHX03WPZpaJ7i1uCv6Ial07pxDxqcT8oCJalY9tW9sv7zBJRaJgTIf5oz5jElb9kWd2D6XwaGB5PJfD6CTQ==";
 
 	/** Atributo auxiliar para os testes de criacao de pedido. */
 	private static DadosCartaoHelper dadosCartaoHelper;
+
+	Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	@BeforeAll
 	public static void init() {
@@ -142,7 +144,12 @@ class PedidoApiTest {
 		CalculoCarrinho calculoCarrinho;
 		try {
 			calculoCarrinho = pedidoApi.postCalcularCarrinho(pedidoCarrinho);
-			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete().doubleValue() > 0.0);
+
+			System.out.println("\nResponse:");
+			System.out.println(gson.toJson(calculoCarrinho));
+			Assert.assertTrue(calculoCarrinho.getData().getValorFrete() > 0.0);
+			Assert.assertTrue(calculoCarrinho.getData().getValorTotaldoPedido() > 0.0);
+			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete() > 0.0);
 
 			// preparacao do objeto que sera utilizado nos demais testes
 			pedidoHelper = preparePedido(calculoCarrinho);
@@ -172,7 +179,12 @@ class PedidoApiTest {
 		CalculoCarrinho calculoCarrinho;
 		try {
 			calculoCarrinho = pedidoApi.postCalcularCarrinho(pedidoCarrinho);
-			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete().doubleValue() > 0.0);
+
+			System.out.println("\nResponse:");
+			System.out.println(gson.toJson(calculoCarrinho));
+			Assert.assertTrue(calculoCarrinho.getData().getValorFrete() > 0.0);
+			Assert.assertTrue(calculoCarrinho.getData().getValorTotaldoPedido() > 0.0);
+			Assert.assertTrue(calculoCarrinho.getData().getProdutos().get(0).getValorTotalFrete() > 0.0);;
 
 			// preparacao do objeto que sera utilizado nos demais testes
 			pedidoHelperComCartao = preparePedido(calculoCarrinho);
@@ -237,6 +249,10 @@ class PedidoApiTest {
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
 			criacaoPedidoDTO = pedidoApi.postCriarPedido(pedido);
+
+			System.out.println("\nResponse:");
+			System.out.println(gson.toJson(criacaoPedidoDTO));
+
 			double expectedValue = pedidoHelper.getTotalPedido();
 			Assert.assertEquals(expectedValue, criacaoPedidoDTO.getData().getValorTotalPedido(), 0.01);
 
@@ -352,6 +368,10 @@ class PedidoApiTest {
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
 			criacaoPedidoDTO = pedidoApi.postCriarPedido(pedido);
+
+			System.out.println("\nResponse:");
+			System.out.println(gson.toJson(criacaoPedidoDTO));
+
 			double valueExpected = pedidoHelperComCartao.getTotalPedido();
 			Assert.assertEquals(valueExpected, criacaoPedidoDTO.getData().getValorTotalPedido(), 0);
 
@@ -384,6 +404,10 @@ class PedidoApiTest {
 		ConfirmacaoDTO confirmacaoDto;
 		try {
 			confirmacaoDto = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
+
+			System.out.println("Response:");
+			System.out.println(gson.toJson(confirmacaoDto));
+
 			Assert.assertTrue(confirmacaoDto.getData().getPedidoCancelado());
 		} catch (ApiException e) {
 			fail(printErrorApi(e, "testPatchPedidosCancelamento"));
@@ -406,6 +430,9 @@ class PedidoApiTest {
 		ConfirmacaoDTO confirmacaoDto;
 		try {
 			confirmacaoDto = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
+
+			System.out.println("Response:");
+			System.out.println(gson.toJson(confirmacaoDto));
 			Assert.assertTrue(confirmacaoDto.getData().getPedidoConfirmado());
 		} catch (ApiException e) {
 			fail(printErrorApi(e, "testPatchPedidosConfirmacao"));
@@ -429,6 +456,9 @@ class PedidoApiTest {
 		PedidoParceiroData pedido;
 		try {
 			pedido = pedidoApi.getDadosPedidoParceiro(pathParams, queryParams);
+
+			System.out.println("Response:");
+			System.out.println(gson.toJson(pedido));
 			Assert.assertEquals(pedidoHelper.getIdPedido().intValue(), pedido.getData().getPedido().getCodigoPedido());
 		} catch (ApiException e) {
 			fail(printErrorApi(e, "testGetDadosPedidoParceiro"));
