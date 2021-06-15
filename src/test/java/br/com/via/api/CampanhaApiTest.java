@@ -48,6 +48,7 @@ public class CampanhaApiTest {
 		System.out.println(gson.toJson(opcoesParcelamento));
 		assertNotNull(opcoesParcelamento);
 		assertEquals(new Integer(1), opcoesParcelamento.getData().get(0).getIdFormaPagamento());
+		assertEquals("Cartão de Crédito Visa ", opcoesParcelamento.getData().get(0).getNome());
 	}
 
 	// erro fora do padrão
