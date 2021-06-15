@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "nome",
     "idFormaPagamento",
     "quantidadeParcelas",
     "taxaJurosAoMes",
@@ -21,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class OpcaoParcelamento {
 
-    @JsonProperty("nome")
-    private String nome;
     @JsonProperty("idFormaPagamento")
     private Integer idFormaPagamento;
     @JsonProperty("quantidadeParcelas")
@@ -33,14 +30,6 @@ public class OpcaoParcelamento {
     private Double valorParcela;
     @JsonProperty("valorTotal")
     private Double valorTotal;
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public Integer getIdFormaPagamento() {
         return idFormaPagamento;

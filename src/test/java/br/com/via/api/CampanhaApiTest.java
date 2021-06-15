@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.response.CampanhasDTO;
-import br.com.via.api.model.response.OpcoesParcelamentoDTO;
+import br.com.via.api.model.response.FormasPagamentoDTO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,24 +42,24 @@ public class CampanhaApiTest {
 	
 
 	@Test
-	public void testGetOpcoesParcelamentoSucess() throws ApiException{
-		OpcoesParcelamentoDTO opcoesParcelamento = campanhaApi.getOpcoesParcelamento("5940", "57.822.975/0001-12");
+	public void testGetFormasPagamentoSucess() throws ApiException{
+		FormasPagamentoDTO formasPagamento = campanhaApi.getFormasPagamento("5940", "57.822.975/0001-12");
 		System.out.println("\nResponse:");
-		System.out.println(gson.toJson(opcoesParcelamento));
-		assertNotNull(opcoesParcelamento);
-		assertEquals(new Integer(1), opcoesParcelamento.getData().get(0).getIdFormaPagamento());
-		assertEquals("Cartão de Crédito Visa ", opcoesParcelamento.getData().get(0).getNome());
+		System.out.println(gson.toJson(formasPagamento));
+		assertNotNull(formasPagamento);
+		assertEquals(new Integer(1), formasPagamento.getData().get(0).getIdFormaPagamento());
+		assertEquals("Cartão de Crédito Visa ", formasPagamento.getData().get(0).getNome());
 	}
 
 	// erro fora do padrão
 	@Test
-	public void testGetOpcoesParcelamentoFail() {
+	public void testGetFormasPagamentoFail() {
 		Assertions.assertThrows(ApiException.class, () -> {
-			OpcoesParcelamentoDTO opcoesParcelamento = campanhaApi.getOpcoesParcelamento("590", "57.822.97-12");
-			System.out.println(gson.toJson(opcoesParcelamento));
-			assertNotNull(opcoesParcelamento);
-			assertTrue(opcoesParcelamento.getData().isEmpty());
-			assertTrue(opcoesParcelamento.getError().getCode() == null);
+			FormasPagamentoDTO formasPagamento = campanhaApi.getFormasPagamento("590", "57.822.97-12");
+			System.out.println(gson.toJson(formasPagamento));
+			assertNotNull(formasPagamento);
+			assertTrue(formasPagamento.getData().isEmpty());
+			assertTrue(formasPagamento.getError().getCode() == null);
 		});
 	}
 	
