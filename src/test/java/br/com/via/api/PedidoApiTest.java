@@ -38,7 +38,7 @@ import com.google.gson.GsonBuilder;
  * Classe de testes para as URI's dos Pedidos do B2B.</br>
  * É importante que os metodos sejam executados na ordem estabelecida, pois</br>
  * alguns metodos de testes possuem dependencia dos resultados dos anteriores.
- * 
+ *
  * @author Marcos Pinheiro da Rocha
  *
  */
@@ -108,9 +108,9 @@ class PedidoApiTest {
 	/**
 	 * Chave pública 2048 bits utilizada para criptografia dos dados do cartão.</br>
 	 * Pode ser obtida pelo URI Rest abaixo.
-	 * 
+	 *
 	 * http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Seguranca/Seguranca_ObterChave
-	 * 
+	 *
 	 */
 	private static final String CHAVE_PUBLICA = "MIIENTCCAx2gAwIBAgIJAJ5ApEGl2oaIMA0GCSqGSIb3DQEBBQUAMIGwMQswCQYDVQQGEwJCUjELMAkGA1UECAwCU1AxFDASBgNVBAcMC1NBTyBDQUVUQU5PMRMwEQYDVQQKDApWSUEgVkFSRUpPMSAwHgYDVQQLDBdTRUdVUkFOQ0EgREEgSU5GT1JNQUNBTzEOMAwGA1UEAwwFUFJPWFkxNzA1BgkqhkiG9w0BCQEWKHRpLnNlZ3VyYW5jYS5pbmZvcm1hY2FvQHZpYXZhcmVqby5jb20uYnIwHhcNMTgwODE2MTIzNjQ2WhcNMjEwODE1MTIzNjQ2WjCBsDELMAkGA1UEBhMCQlIxCzAJBgNVBAgMAlNQMRQwEgYDVQQHDAtTQU8gQ0FFVEFOTzETMBEGA1UECgwKVklBIFZBUkVKTzEgMB4GA1UECwwXU0VHVVJBTkNBIERBIElORk9STUFDQU8xDjAMBgNVBAMMBVBST1hZMTcwNQYJKoZIhvcNAQkBFih0aS5zZWd1cmFuY2EuaW5mb3JtYWNhb0B2aWF2YXJlam8uY29tLmJyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqObNb7KAP09WsV9h76Dw3tj2qa3l97K+slfzLkOBvi0xjacuKCnvsMSGEBosvWY/qNmSLE1YaoyFt7ZaeOiALKh2AFckJRM+/zvQzqi6cPnW0cGsEE/9WO48Fgh894pKjHpukATFb9tBYGTBEW46AH2WiAR735KEnDfFAHG//pkLKriPWEZBr9tf4gdNvyJ/ybs5JrBRU1RKE9MM7qnMkCouKTPwY/lS/2Xb1IYkyZulCf3Uyl7zpB6hQUhprS1R5meRocpGgHJCFfiWD/uXa5nREuGuQxcImwzvf+enwT6CooRoM2rN6IQWSY+uQ64dhSt4FMajZFmHVpLfUIOjEwIDAQABo1AwTjAdBgNVHQ4EFgQUZ22K62aMm/lI5LfblgINPvz8ae8wHwYDVR0jBBgwFoAUZ22K62aMm/lI5LfblgINPvz8ae8wDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEAj23IDXLPkQpFDbgAtgKuO9N66o61edbJ1+BMjdSsfO0vMVpmBDlKdinxlh509/qJm/WLYswKkKOi7VHojBSV5HyrO5YGCSJFvVGJqF4JUxy7GrWTHqgwcylmX5B5lNd5aMIxwG6AF4o2cp6IPe+Uwaroa8kLTrtM0eRgAInHbQA7MXbvOZY+pzE4s6jFbA1O321zVg4C4Y3C4e30yf9YJNK5XjUP26duvwGqQrZg49ZU3W/t6GYY1kQhSeBG0FPg2GOIHX03WPZpaJ7i1uCv6Ial07pxDxqcT8oCJalY9tW9sv7zBJRaJgTIf5oz5jElb9kWd2D6XwaGB5PJfD6CTQ==";
 
@@ -486,6 +486,69 @@ class PedidoApiTest {
 		}
 	}
 
+	@Test
+	@Order(9)
+	public void testGetDadosPedidoParceiroFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			Map<String, String> queryParams = new HashMap<>();
+			queryParams.put("request.idCompra", pedidoHelper.getIdPedido().toString());
+			queryParams.put("request.cnpj", CNPJ);
+			queryParams.put("request.idCampanha", String.valueOf(ID_CAMPANHA));
+			queryParams.put("request.idPedidoParceiro", pedidoHelper.getIdPedidoParceiro().toString());
+			PedidoParceiroData pedido;
+			pedido = pedidoApi.getDadosPedidoParceiro(null, queryParams);
+
+		});
+	}
+
+	@Test
+	@Order(10)
+	public void testPostCalcularCarrinhoParaCriacaoPedidoFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			pedidoApi.postCalcularCarrinho(null);
+		});
+	}
+
+	@Test
+	@Order(11)
+	public void testPatchPedidosFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			ConfirmacaoReqDTO dto = new ConfirmacaoReqDTO();
+			dto.setIdCampanha(ID_CAMPANHA);
+			dto.setIdPedidoParceiro(pedidoHelperComCartao.getIdPedidoParceiro());
+			dto.setConfirmado(true);
+
+			pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, null);
+		});
+	}
+
+	@Test
+	@Order(12)
+	public void testPatchPedidosConfirmacaoFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			Map<String, String> variableParams = new HashMap<>();
+			variableParams.put("idCompra", pedidoHelperComCartao.getIdPedido().toString());
+
+			pedidoApi.patchPedidosCancelamentoOrConfirmacao(null, variableParams);
+		});
+	}
+
+	@Test
+	@Order(13)
+	public void testGetNotaFiscalPedidoFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			pedidoApi.getNotaFiscalPedido(null);
+		});
+	}
+
+	@Test
+	@Order(14)
+	public void testPostCriarPedidoFail() {
+		Assertions.assertThrows(ApiException.class, () -> {
+			pedidoApi.postCriarPedido(null);
+		});
+	}
+
 	private String printErrorApi(ApiException e, String method) {
 		return String.format(
 				"Falha. Uma exceção ApiException não deveria ser lançada!\nApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s",
@@ -507,9 +570,9 @@ class PedidoApiTest {
 	}
 
 	/**
-	 * Classe interna auxilçiar utilizada para guardar os dados os pedidos gerados
+	 * Classe interna auxiliar utilizada para guardar os dados os pedidos gerados
 	 * para serem utilizados nos outros metodos dependentes.
-	 * 
+	 *
 	 * @author Marcos
 	 *
 	 */
@@ -568,7 +631,7 @@ class PedidoApiTest {
 
 	/**
 	 * Classe auxiliara para dados do cartao credito.
-	 * 
+	 *
 	 * @author Marcos P. da Rocha
 	 *
 	 */
@@ -582,8 +645,8 @@ class PedidoApiTest {
 		private String mesValidade;
 
 		public DadosCartaoHelper(Encryptor encryptor, String nome, String numero, String codigoVerificador,
-				String anoValidade,
-				String mesValidade) {
+								 String anoValidade,
+								 String mesValidade) {
 			this.encryptor = encryptor;
 			this.nome = nome;
 			this.numero = numero;
