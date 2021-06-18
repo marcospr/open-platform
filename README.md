@@ -42,6 +42,20 @@ A seguir, são apresentadas as APIs e exemplos com as as principais operações do 
     ```
     
 	***
+    
+    | Obtém todas as opções de pagamento para uma determinada campanha: |
+    | ------ | 
+    | http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
+    | http://api-integracao-pontofrio.hlg-b2b.net/swagger/ui/index#/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
+    | http://api-integracao-extra.hlg-b2b.net/swagger/ui/index#/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
+    
+    ```java
+    CampanhaApi campanhaApi = new CampanhaApi();
+    OpcoesParcelamentoDTO opcoesParcelamento = campanhaApi.getOpcoesParcelamento("5940", "57.822.975/0001-12");
+    ```
+    
+***
+
 - ## Pedido
     Api utilizada para operações de pedidos
      ## Calcular carrinho:
@@ -178,20 +192,6 @@ A seguir, são apresentadas as APIs e exemplos com as as principais operações do 
         ```
 		
 		
-
-    
-    | Obtém todas as opções de pagamento para uma determinada campanha: |
-    | ------ | 
-    | http://api-integracao-casasbahia.hlg-b2b.net/swagger/ui/index#!/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
-    | http://api-integracao-pontofrio.hlg-b2b.net/swagger/ui/index#/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
-    | http://api-integracao-extra.hlg-b2b.net/swagger/ui/index#/Campanha/Campanha_ListarOpcoesParcelamentoAsync |
-    
-    ```java
-    CampanhaApi campanhaApi = new CampanhaApi();
-    OpcoesParcelamentoDTO opcoesParcelamento = campanhaApi.getOpcoesParcelamento("5940", "57.822.975/0001-12");
-    ```
-    
-***
     
 - ## Forma de Pagamento
     Api Utilizada para operações de forma de pagamento

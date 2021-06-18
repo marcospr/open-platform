@@ -3,6 +3,7 @@ package br.com.via.api;
 import java.util.Map;
 
 import br.com.via.api.client.ApiException;
+import br.com.via.api.client.PropsReaderUtil;
 import br.com.via.api.client.RequestUtil;
 import br.com.via.api.model.request.ConfirmacaoReqDTO;
 import br.com.via.api.model.request.CriacaoPedidoRequest;
@@ -23,13 +24,10 @@ public class PedidoApi {
 
 	private RequestUtil<CriacaoPedidoRequest, CriacaoPedidoDTO> requestUtilCriacaoPedido;
 
-	private String basePath;
+	private final String basePath;
 
-	private String authorization;
-
-	public PedidoApi(String basePath, String authorization) {
-		this.basePath = basePath;
-		this.authorization = authorization;
+	public PedidoApi() {
+		this.basePath = new PropsReaderUtil().getHost();
 		requestUtilPedidoCarrinho = new RequestUtil<>(CalculoCarrinho.class);
 		requestUtilPedidoParceiro = new RequestUtil<>(PedidoParceiroData.class);
 		requestUtilConfirmacaoReqDTO = new RequestUtil<>(ConfirmacaoDTO.class);
@@ -53,7 +51,7 @@ public class PedidoApi {
 		// create path and map variables
 		String path = basePath + "/pedidos/carrinho";
 
-		return requestUtilPedidoCarrinho.post(path, authorization, pedidosCarrinho);
+		return requestUtilPedidoCarrinho.post(path, pedidosCarrinho);
 	}
 
 	public PedidoParceiroData getDadosPedidoParceiro(Map<String, String> pathParams, Map<String, String> queryParams)
@@ -66,7 +64,7 @@ public class PedidoApi {
 		// create path and map variables
 		String path = basePath + String.format("/pedidos/%s", pathParams.get("idCompra"));
 
-		return requestUtilPedidoParceiro.get(path, authorization, queryParams);
+		return requestUtilPedidoParceiro.get(path, queryParams);
 	}
 
 	public ConfirmacaoDTO patchPedidosCancelamentoOrConfirmacao(ConfirmacaoReqDTO confirmacaoPedido,
@@ -86,7 +84,7 @@ public class PedidoApi {
 		// create path and map variables
 		String path = basePath + String.format("/pedidos/%s", variableParams.get("idCompra"));
 
-		return requestUtilConfirmacaoReqDTO.patch(path, authorization, confirmacaoPedido);
+		return requestUtilConfirmacaoReqDTO.patch(path, confirmacaoPedido);
 	}
 
 	public String getNotaFiscalPedido(Map<String, String> pathParams) throws ApiException {
@@ -98,7 +96,7 @@ public class PedidoApi {
 		String path = basePath + String.format("/pedidos/%s/entregas/%s/nfe/%s", pathParams.get("idCompra"),
 				pathParams.get("idCompraEntrega"), pathParams.get("formato"));
 
-		return requestUtilNotaFiscalPedido.get(path, authorization, pathParams);
+		return requestUtilNotaFiscalPedido.get(path, pathParams);
 	}
 
 	public CriacaoPedidoDTO postCriarPedido(CriacaoPedidoRequest pedido) throws ApiException {
@@ -111,7 +109,7 @@ public class PedidoApi {
 		// create path and map variables
 		String path = basePath + "/pedidos";
 
-		return requestUtilCriacaoPedido.post(path, authorization, pedido);
+		return requestUtilCriacaoPedido.post(path, pedido);
 	}
 
 }

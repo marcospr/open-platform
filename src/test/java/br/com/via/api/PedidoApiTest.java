@@ -48,12 +48,6 @@ class PedidoApiTest {
 	/** Instancia do client API. */
 	private static PedidoApi pedidoApi;
 
-	/** Token. */
-	private static final String AUTHORIZATION_TOKEN = "H9xO4+R8GUy+18nUCgPOlg==";
-
-	/** Host do servico do Extra. */
-	private static final String HOST_EXTRA = "http://api-integracao-extra.hlg-b2b.net";
-
 	/** Host do servico das Casas Bahia. */
 	// private static final String HOST_CASAS_BAHIA = "";
 
@@ -121,7 +115,7 @@ class PedidoApiTest {
 
 	@BeforeAll
 	public static void init() {
-		pedidoApi = new PedidoApi(HOST_EXTRA, AUTHORIZATION_TOKEN);
+		pedidoApi = new PedidoApi();
 		dadosCartaoHelper = new DadosCartaoHelper(new Encryptor(CHAVE_PUBLICA), "Jose da Silva", NUMERO_CARTAO_MASTER,
 				"1234", "2045", "12");
 	}

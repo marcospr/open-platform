@@ -13,12 +13,9 @@ public class FormaPagamentoApi {
 	private RequestUtil<?, OpcoesParcelamentoDTO> request;
 	
 	private String basePath;
-	private String authorization;
 	
 	public FormaPagamentoApi() {
-		PropsReaderUtil prop = new PropsReaderUtil();
-		this.basePath = prop.getHost();
-		this.authorization = prop.getToken();
+		this.basePath = new PropsReaderUtil().getHost();
 		request = new RequestUtil<>(OpcoesParcelamentoDTO.class);
 	}
 	
@@ -27,7 +24,7 @@ public class FormaPagamentoApi {
 		queryParams.put("idCampanha", idCampanha);
 		queryParams.put("cnpj", cnpj);
 		queryParams.put("valorParcelar", valorParcela);
-		return request.get(basePath + "/formas-pagamento/"+idFormaPagamento+"/opcoes-parcelamento", authorization, queryParams);
+		return request.get(basePath + "/formas-pagamento/"+idFormaPagamento+"/opcoes-parcelamento", queryParams);
 	}
 
 }

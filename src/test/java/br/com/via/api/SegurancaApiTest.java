@@ -40,21 +40,21 @@ public class SegurancaApiTest {
 	}
 	
 	//Mesmo com um token invalido ele tem sucesso na requisição
-	@Test
-	@Ignore
-	public void getChaveTestFail() {
-		try {
-			ChaveDTO chave = segurancaApi.setAuthorization("TOKEN_FALSO_123").getChave();
-			System.out.println(gson.toJson(chave));
-			assertNotNull(chave);
-		} catch (ApiException e) {
-			printErrorApi(e, "testGetCampanhaFail");
-			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
-		} catch (Exception e) {
-			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
-		}
-	}
-	
+//	@Test
+//	@Ignore
+//	public void getChaveTestFail() {
+//		try {
+//			ChaveDTO chave = segurancaApi.setAuthorization("TOKEN_FALSO_123").getChave();
+//			System.out.println(gson.toJson(chave));
+//			assertNotNull(chave);
+//		} catch (ApiException e) {
+//			printErrorApi(e, "testGetCampanhaFail");
+//			fail("Falha. Uma exceção ApiException não deveria ser lançada!");
+//		} catch (Exception e) {
+//			fail("Falha. Uma exceção não deveria ser lançada!\n" + e.getMessage());
+//		}
+//	}
+//	
 	private void printErrorApi(ApiException e, String method) {
 		System.out.println(String.format("ApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s", method,
 				e.getCode(), e.getMessage(), e.getResponseBody(), e.getResponseHeaders()));

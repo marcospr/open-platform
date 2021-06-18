@@ -11,23 +11,15 @@ public class SegurancaApi {
 	private RequestUtil<?, ChaveDTO> request;
 	
 	private String basePath;
-	private String authorization;
 	
 	public SegurancaApi() {
-		PropsReaderUtil prop = new PropsReaderUtil();
-		this.basePath = prop.getHost();
-		this.authorization = prop.getToken();
+		this.basePath =  new PropsReaderUtil().getHost();
 		request = new RequestUtil<>(ChaveDTO.class);
 	}
 	
 	public ChaveDTO getChave() throws ApiException{
-		return request.get(basePath + "/seguranca/chaves", authorization);
+		return request.get(basePath + "/seguranca/chaves");
 	}
 	
-	//metodo utilizado somente para teste
-	public SegurancaApi setAuthorization(String token) {
-		this.authorization = token;
-		return this;
-	}
 
 }

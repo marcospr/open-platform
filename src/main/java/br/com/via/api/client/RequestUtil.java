@@ -25,60 +25,51 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 	private transient Client client;
 	private JsonConverter<T2> tratarRetorno;
 	private boolean exibeInputBody;
+	String accessToken;
 
 	public RequestUtil(Class<T2> clazz2) {
-		this.tratarRetorno = new JsonConverter<>(clazz2);
+		this.tratarRetorno = new JsonConverter<>(clazz2); 
+		this.accessToken = new PropsReaderUtil().getToken();
 	}
 
-	public T2 get(String path, String accessToken) throws ApiException {
-		return this.get(path, accessToken, null);
+	public T2 get(String path) throws ApiException {
+		return this.get(path, null);
 	}
 
-	public T2 get(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
+	public T2 get(String path, Map<String, String> queryParams) throws ApiException {
 		try {
-			Response response = this.doGet(path, accessToken, queryParams);
+			Response response = this.doGet(path, queryParams);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 	
-	public T2 get(String path, String accessToken, String parameter, List<String> parameterValues) throws ApiException {
+	public T2 get(String path, String parameter, List<String> parameterValues) throws ApiException {
 		try {
-			Response response = this.doGet(path, accessToken, parameter, parameterValues);
+			Response response = this.doGet(path, parameter, parameterValues);
 			return tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 
+
 	public T2 post(String path, T1 entityIn) throws ApiException {
 		try {
 			if (isExibeInputBody()) {
 				requestBody(entityIn);
 			}
-			Response response = this.doPost(path, null, entityIn);
+			Response response = this.doPost(path, entityIn);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
 		}
 	}
 
-	public T2 post(String path, String accessToken, T1 entityIn) throws ApiException {
+	public T2 patch(String path, T1 entityIn) throws ApiException {
 		try {
-			if (isExibeInputBody()) {
-				requestBody(entityIn);
-			}
-			Response response = this.doPost(path, accessToken, entityIn);
-			return this.tratarRetorno.convertToObject(response);
-		} finally {
-			this.closeClient();
-		}
-	}
-
-	public T2 patch(String path, String accessToken, T1 entityIn) throws ApiException {
-		try {
-			Response response = this.doPath(path, accessToken, entityIn);
+			Response response = this.doPath(path, entityIn);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
 			this.closeClient();
@@ -97,7 +88,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		}
 	}
 
-	private Response doPost(String path, String accessToken, T1 entityIn) throws ApiException {
+	private Response doPost(String path, T1 entityIn) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (accessToken != null) {
@@ -110,7 +101,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		return response;
 	}
 
-	private Response doPath(String path, String accessToken, T1 entityIn) throws ApiException {
+	private Response doPath(String path, T1 entityIn) throws ApiException {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		webTarget.property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true);
@@ -124,7 +115,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		return response;
 	}
 
-	private Response doGet(String path, String accessToken, Map<String, String> queryParams) throws ApiException {
+	private Response doGet(String path, Map<String, String> queryParams) throws ApiException {
 		Response response = null;
 		String fullPath = path;
 		if(queryParams != null) {
@@ -156,7 +147,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		return b.toString();
 	}
 	
-	private Response doGet(String path, String accessToken, String parameter, List<String> parameterValues) {
+	private Response doGet(String path, String parameter, List<String> parameterValues) {
 		Response response = null;
 		WebTarget webTarget = this.createWebTarget(path);
 		if (parameter != null) {

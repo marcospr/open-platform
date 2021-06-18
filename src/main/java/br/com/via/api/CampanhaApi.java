@@ -15,12 +15,9 @@ public class CampanhaApi {
 	private RequestUtil<?, FormasPagamentoDTO> requestUtilFormaPagamento;
 	
 	private String basePath;
-	private String authorization;
 	
 	public CampanhaApi() {
-		PropsReaderUtil prop = new PropsReaderUtil();
-		this.basePath = prop.getHost();
-		this.authorization = prop.getToken();
+		this.basePath = new PropsReaderUtil().getHost();
 		requestUtilCampanha = new RequestUtil<>(CampanhasDTO.class);
 		requestUtilFormaPagamento = new RequestUtil<>(FormasPagamentoDTO.class);
 	}
@@ -29,13 +26,13 @@ public class CampanhaApi {
 		Map<String, String> queryParams = new HashMap<String, String>();
 		queryParams.put("dataInicio", dtInicio);
 		queryParams.put("dataFim", dtFim);
-		return requestUtilCampanha.get(basePath + "/campanhas", authorization, queryParams);
+		return requestUtilCampanha.get(basePath + "/campanhas", queryParams);
 	}
 	
 	public FormasPagamentoDTO getFormasPagamento(String idCampanha, String cnpj) throws ApiException {
 		Map<String, String> queryParams = new HashMap<String, String>();
 		queryParams.put("cnpj", cnpj);
-		return requestUtilFormaPagamento.get(basePath + "/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", authorization, queryParams);
+		return requestUtilFormaPagamento.get(basePath + "/campanhas/"+idCampanha+"/formas-pagamento/opcoes-parcelamento", queryParams);
 	}
 
 }
