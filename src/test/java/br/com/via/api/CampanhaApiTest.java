@@ -64,11 +64,7 @@ public class CampanhaApiTest {
 	}
 	
 	
-	
-	private void printErrorApi(ApiException e, String method) {
-		System.out.println(String.format("ApiException %s \nCode: %s \nMessage: %s \nBody: %s \nHeaders: %s", method,
-				e.getCode(), e.getMessage(), e.getResponseBody(), e.getResponseHeaders()));
-	}
+
 	
 
 }

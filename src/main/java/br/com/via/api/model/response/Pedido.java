@@ -148,5 +148,39 @@ public class Pedido implements Serializable {
 		this.additionalProperties.put(name, value);
 	}
 
+	public String getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(String dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public String getUrlBoleto() {
+		return urlBoleto;
+	}
+
+	public void setUrlBoleto(String urlBoleto) {
+		this.urlBoleto = urlBoleto;
+	}
+
+	public Double getValorAdicional() {
+		return valorAdicional;
+	}
+
+	public void setValorAdicional(Double valorAdicional) {
+		this.valorAdicional = valorAdicional;
+	}
+
+	public Double getValorFrete() {
+		return valorFrete;
+	}
+
+	public void setValorFrete(Double valorFrete) {
+		this.valorFrete = valorFrete;
+	}
+	
+	
+
 
 }

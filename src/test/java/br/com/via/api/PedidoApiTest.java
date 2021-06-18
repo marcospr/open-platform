@@ -9,8 +9,15 @@ import java.util.Map;
 import java.util.Random;
 
 import org.junit.Assert;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import br.com.via.api.client.ApiException;
 import br.com.via.api.model.request.CartaoCreditoDadosDto;
@@ -30,9 +37,6 @@ import br.com.via.api.model.response.ConfirmacaoDTO;
 import br.com.via.api.model.response.CriacaoPedidoDTO;
 import br.com.via.api.model.response.PedidoParceiroData;
 import br.com.via.api.security.Encryptor;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * Classe de testes para as URI's dos Pedidos do B2B.</br>

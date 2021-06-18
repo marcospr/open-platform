@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import br.com.via.api.client.ApiException;
 import br.com.via.api.client.PropsReaderUtil;
 import br.com.via.api.client.RequestUtil;
