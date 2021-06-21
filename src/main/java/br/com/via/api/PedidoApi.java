@@ -33,12 +33,6 @@ public class PedidoApi {
 		requestUtilConfirmacaoReqDTO = new RequestUtil<>(ConfirmacaoDTO.class);
 		requestUtilNotaFiscalPedido = new RequestUtil<>(String.class);
 		requestUtilCriacaoPedido = new RequestUtil<>(CriacaoPedidoDTO.class);
-		// Para logar o payload da requisicao
-		requestUtilPedidoCarrinho.setExibeInputBody(true);
-		requestUtilPedidoParceiro.setExibeInputBody(true);
-		requestUtilConfirmacaoReqDTO.setExibeInputBody(true);
-		requestUtilNotaFiscalPedido.setExibeInputBody(true);
-		requestUtilCriacaoPedido.setExibeInputBody(true);
 	}
 
 	public CalculoCarrinho postCalcularCarrinho(PedidoCarrinho pedidosCarrinho) throws ApiException {

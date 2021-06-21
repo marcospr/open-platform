@@ -24,7 +24,6 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 	
 	private transient Client client;
 	private JsonConverter<T2> tratarRetorno;
-	private boolean exibeInputBody;
 	String accessToken;
 
 	public RequestUtil(Class<T2> clazz2) {
@@ -57,9 +56,7 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 
 	public T2 post(String path, T1 entityIn) throws ApiException {
 		try {
-			if (isExibeInputBody()) {
-				requestBody(entityIn);
-			}
+//			requestBody(entityIn);
 			Response response = this.doPost(path, entityIn);
 			return this.tratarRetorno.convertToObject(response);
 		} finally {
@@ -178,16 +175,9 @@ public class RequestUtil<T1 extends Serializable, T2 extends Serializable> imple
 		}
 	}
 
-	private void requestBody(T1 entityIn) {
-		JsonConverter<T1> tratarEntrada = new JsonConverter<T1>((Class<T1>) entityIn.getClass());
-		LOGGER.log(Level.INFO, "payload da requisição: \n{0} ", tratarEntrada.convertToString(entityIn));
-	}
+//	private void requestBody(T1 entityIn) {
+//		JsonConverter<T1> tratarEntrada = new JsonConverter<T1>((Class<T1>) entityIn.getClass());
+//		LOGGER.log(Level.INFO, "payload da requisição: \n{0} ", tratarEntrada.convertToString(entityIn));
+//	}
 
-	public void setExibeInputBody(boolean exibeInputBody) {
-		this.exibeInputBody = exibeInputBody;
-	}
-	
-	public boolean isExibeInputBody() {
-		return exibeInputBody;
-	}
 }

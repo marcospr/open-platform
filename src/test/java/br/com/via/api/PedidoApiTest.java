@@ -138,6 +138,9 @@ class PedidoApiTest {
 		pedidoCarrinho.setCnpj(CNPJ);
 		pedidoCarrinho.setCep(CEP);
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
+		
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(produto));
 
 		CalculoCarrinho calculoCarrinho;
 		try {
@@ -173,6 +176,9 @@ class PedidoApiTest {
 		pedidoCarrinho.setCnpj(CNPJ);
 		pedidoCarrinho.setCep(CEP);
 		pedidoCarrinho.setProdutos(Arrays.asList(produto));
+		
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(pedidoCarrinho));
 
 		CalculoCarrinho calculoCarrinho;
 		try {
@@ -243,6 +249,9 @@ class PedidoApiTest {
 		pedido.setValorFrete(pedidoHelper.getValorFrete());
 		pedido.setAguardarConfirmacao(true);
 		pedido.setOptantePeloSimples(true);
+		
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(pedido));
 
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
@@ -362,6 +371,9 @@ class PedidoApiTest {
 		pedido.setValorTotalPedido(pedidoHelperComCartao.getTotalPedido());
 		pedido.setValorTotalComplementar(30.0);
 		pedido.setValorTotalComplementarComJuros(30.0);
+		
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(pedido));
 
 		CriacaoPedidoDTO criacaoPedidoDTO;
 		try {
@@ -398,6 +410,9 @@ class PedidoApiTest {
 		dto.setIdPedidoMktplc("1-01");
 		dto.setMotivoCancelamento("teste");
 		dto.setParceiro("BANCO INTER");
+		
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(dto));
 
 		ConfirmacaoDTO confirmacaoDto;
 		try {
@@ -425,6 +440,9 @@ class PedidoApiTest {
 		dto.setIdPedidoParceiro(pedidoHelperComCartao.getIdPedidoParceiro());
 		dto.setConfirmado(true);
 
+		System.out.println("\nRequest:");
+		System.out.println(gson.toJson(dto));
+		
 		ConfirmacaoDTO confirmacaoDto;
 		try {
 			confirmacaoDto = pedidoApi.patchPedidosCancelamentoOrConfirmacao(dto, variableParams);
